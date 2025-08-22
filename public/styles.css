@@ -154,6 +154,7 @@ body {
     align-items: center;
     justify-content: center;
     padding: 2rem;
+    position: relative;
 }
 
 .info-container {
@@ -165,9 +166,11 @@ body {
 .info-box {
     background-color: #E0E0E0;
     border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    padding: 1.2rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: static;
+    max-width: 100%;
+    margin-bottom: 1.5rem;
 }
 
 .info-box:last-of-type {
@@ -187,12 +190,20 @@ body {
     font-size: 0.95rem;
 }
 
-.finance-icon {
+.decorative-image {
     position: absolute;
-    top: 2rem;
-    right: 2rem;
-    font-size: 3rem;
-    filter: grayscale(100%);
+    top: 6rem;
+    right: 1rem;
+    width: 120px;
+    height: 90px;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.decorative-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 /* Responsive */
@@ -227,9 +238,106 @@ body {
         font-size: 2rem;
     }
     
-    .finance-icon {
+    .info-box {
         position: static;
-        text-align: center;
-        margin-top: 1rem;
+        max-width: 100%;
+        margin-bottom: 1rem;
     }
+    
+    .decorative-image {
+        position: static;
+        width: 80px;
+        height: 60px;
+        margin: 1rem auto 0;
+        opacity: 0.5;
+    }
+}
+
+/* Estilos para las imágenes en info-box */
+.info-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.info-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.info-box:hover .feature-icon {
+    opacity: 1;
+}
+
+.info-text {
+    flex: 1;
+}
+
+.info-text h3 {
+    margin-top: 0;
+}
+
+/* Mejora la imagen decorativa existente */
+.decorative-image {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    width: 150px;
+    height: 120px;
+    opacity: 0.7;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.decorative-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Actualización responsive */
+@media (max-width: 768px) {
+    .info-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .info-icon {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .decorative-image {
+        position: static;
+        width: 100px;
+        height: 80px;
+        margin: 1rem auto 0;
+        opacity: 0.6;
+    }
+}
+
+/* Efecto hover para info-box */
+.info-box {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.info-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
