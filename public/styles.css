@@ -1,0 +1,235 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Columna Izquierda */
+.left-column {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    padding: 2rem;
+}
+
+.login-content {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.logo-icon {
+    font-size: 2.5rem;
+    margin-right: 0.5rem;
+    color: #5A6BFF;
+}
+
+.logo-text {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.core {
+    color: #000000;
+}
+
+.wall {
+    color: #5A6BFF;
+}
+
+.welcome {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 2rem;
+}
+
+.wait-message {
+    font-size: 1.2rem;
+    color: #666666;
+    margin-bottom: 2rem;
+}
+
+.login-form {
+    width: 100%;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333333;
+    font-weight: 500;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #5A6BFF;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: #4A5BEF;
+}
+
+.input-group input::placeholder {
+    color: #999999;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 1rem;
+    background-color: #E5E5E5;
+    color: #000000;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+    background-color: #D5D5D5;
+}
+
+.login-btn:active {
+    transform: translateY(1px);
+}
+
+.error-message {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background-color: #FFEBEE;
+    color: #C62828;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.success-message {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background-color: #E8F5E8;
+    color: #2E7D32;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+/* Columna Derecha */
+.right-column {
+    flex: 1;
+    background-color: #F5F5F5;
+    background-image: radial-gradient(circle, #E0E0E0 1px, transparent 1px);
+    background-size: 20px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.info-container {
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+}
+
+.info-box {
+    background-color: #E0E0E0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info-box:last-of-type {
+    margin-bottom: 0;
+}
+
+.info-box h3 {
+    color: #333333;
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.info-box p {
+    color: #666666;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.finance-icon {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-size: 3rem;
+    filter: grayscale(100%);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    .left-column,
+    .right-column {
+        flex: none;
+        height: 50vh;
+    }
+    
+    .left-column {
+        padding: 1rem;
+    }
+    
+    .right-column {
+        padding: 1rem;
+    }
+    
+    .welcome {
+        font-size: 2rem;
+    }
+    
+    .logo-text {
+        font-size: 1.5rem;
+    }
+    
+    .logo-icon {
+        font-size: 2rem;
+    }
+    
+    .finance-icon {
+        position: static;
+        text-align: center;
+        margin-top: 1rem;
+    }
+}

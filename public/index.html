@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinScope - Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Columna Izquierda - Login -->
+        <div class="left-column">
+            <div class="login-content">
+                <div class="logo">
+                    <div class="logo-icon">📊</div>
+                    <div class="logo-text">
+                        <span class="core">Fin</span><span class="wall">Scope</span>
+                    </div>
+                </div>
+                
+                <h1 class="welcome">Bienvenido</h1>
+                
+                <form id="loginForm" class="login-form">
+                    <div class="input-group">
+                        <label for="email">Correo electrónico:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="password">Contraseña:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    
+                    <button type="submit" class="login-btn">Iniciar Sesión</button>
+                </form>
+                
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <!-- Columna Derecha - Información -->
+        <div class="right-column">
+            <div class="info-container">
+                <div class="info-box">
+                    <h3>Análisis Financiero Inteligente</h3>
+                    <p>Accede a herramientas avanzadas de análisis financiero, reportes personalizados y dashboards interactivos para tomar decisiones informadas.</p>
+                </div>
+                
+                <div class="info-box">
+                    <h3>Gestión de Portafolios</h3>
+                    <p>Monitorea tus inversiones en tiempo real, analiza el rendimiento histórico y optimiza tu estrategia de inversión con datos precisos.</p>
+                </div>
+                
+                <div class="info-box">
+                    <h3>Reportes y Análisis</h3>
+                    <p>Genera reportes detallados, análisis de tendencias y proyecciones financieras basadas en datos del mercado y algoritmos avanzados.</p>
+                </div>
+                
+                <div class="finance-icon">💼</div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

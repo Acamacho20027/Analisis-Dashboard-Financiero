@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinScope - Verificación</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Columna Izquierda - Verificación -->
+        <div class="left-column">
+            <div class="login-content">
+                <div class="logo">
+                    <div class="logo-icon">📊</div>
+                    <div class="logo-text">
+                        <span class="core">Fin</span><span class="wall">Scope</span>
+                    </div>
+                </div>
+                
+                <h1 class="welcome">Espera:</h1>
+                <p class="wait-message">Enviamos un código a <span id="maskedEmail">•••• ••34</span>.</p>
+                
+                <form id="verifyForm" class="login-form">
+                    <div class="input-group">
+                        <input type="text" id="code" name="code" placeholder="Código de 6 dígitos" maxlength="6" required>
+                    </div>
+                    
+                    <button type="submit" class="login-btn">Verificar</button>
+                </form>
+                
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+                <div id="successMessage" class="success-message" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <!-- Columna Derecha - Información -->
+        <div class="right-column">
+            <div class="info-container">
+                <div class="info-box">
+                    <h3>Mercados en Tiempo Real</h3>
+                    <p>Accede a datos actualizados de mercados globales, índices bursátiles y cotizaciones en tiempo real para mantenerte informado.</p>
+                </div>
+                
+                <div class="info-box">
+                    <h3>Análisis Técnico Avanzado</h3>
+                    <p>Utiliza herramientas profesionales de análisis técnico, indicadores personalizables y gráficos interactivos para identificar oportunidades.</p>
+                </div>
+                
+                <div class="info-box">
+                    <h3>Gestión de Riesgos</h3>
+                    <p>Implementa estrategias de gestión de riesgos, establece stop-loss automáticos y monitorea la exposición de tu portafolio.</p>
+                </div>
+                
+                <div class="finance-icon">📈</div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="verify.js"></script>
+</body>
+</html>
