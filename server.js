@@ -40,6 +40,11 @@ app.get('/espera', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'espera.html'));
 });
 
+// Ruta para el dashboard (nueva funcionalidad)
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
+
 // Ruta para procesar el login
 app.post('/api/login', async (req, res) => {
   try {
@@ -132,5 +137,4 @@ app.post('/api/verify', (req, res) => {
 // Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
-  console.log('Recuerda configurar tu correo y contraseña en server.js');
 });

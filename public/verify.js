@@ -1,3 +1,4 @@
+// Lógica de verificación para FinScope
 document.addEventListener('DOMContentLoaded', function() {
     const verifyForm = document.getElementById('verifyForm');
     const errorMessage = document.getElementById('errorMessage');
@@ -11,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!userEmail) {
         // Si no hay email, redirigir al login
         window.location.href = '/';
-        return;
     }
     
     // Mostrar email enmascarado
@@ -67,15 +67,19 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.success) {
                 showSuccess('Código verificado exitosamente');
                 
-                // Limpiar localStorage
+                // Establecer autenticación para el dashboard
+                localStorage.setItem('isAuthenticated', 'true');
+                localStorage.setItem('username', userEmail);
+                
+                // Limpiar localStorage temporal
                 localStorage.removeItem('userEmail');
                 localStorage.removeItem('maskedEmail');
                 
-                // Aquí puedes redirigir a la siguiente pantalla
-                // Por ahora, mostraremos un mensaje de éxito
+                // Redirigir al dashboard después de verificación exitosa
+                console.log('Verificación exitosa, redirigiendo al dashboard...');
                 setTimeout(() => {
-                    alert('¡Autenticación completada! Redirigiendo...');
-                    // window.location.href = '/dashboard'; // Descomenta cuando tengas la siguiente pantalla
+                    console.log('Redirigiendo a:', '/dashboard');
+                    window.location.href = '/dashboard';
                 }, 2000);
                 
             } else {

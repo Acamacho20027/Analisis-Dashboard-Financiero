@@ -1,3 +1,4 @@
+// Lógica de autenticación para FinScope
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
     const errorMessage = document.getElementById('errorMessage');

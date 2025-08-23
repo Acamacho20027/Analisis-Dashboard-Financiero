@@ -13,18 +13,22 @@
         <div class="left-column">
             <div class="login-content">
                 <div class="logo">
-                    <div class="logo-icon">📊</div>
+                    <div class="logo-icon">🔐</div>
                     <div class="logo-text">
                         <span class="core">Fin</span><span class="wall">Scope</span>
                     </div>
                 </div>
                 
-                <h1 class="welcome">Espera:</h1>
-                <p class="wait-message">Enviamos un código a <span id="maskedEmail">•••• ••34</span>.</p>
+                <h1 class="welcome">Verificación</h1>
+                
+                <div class="wait-message">
+                    Se ha enviado un código de verificación a tu correo electrónico.
+                </div>
                 
                 <form id="verifyForm" class="login-form">
                     <div class="input-group">
-                        <input type="text" id="code" name="code" placeholder="Código de 6 dígitos" maxlength="6" required>
+                        <label for="code">Código de verificación:</label>
+                        <input type="text" id="code" name="code" maxlength="6" placeholder="000000" required>
                     </div>
                     
                     <button type="submit" class="login-btn">Verificar</button>
@@ -32,6 +36,10 @@
                 
                 <div id="errorMessage" class="error-message" style="display: none;"></div>
                 <div id="successMessage" class="success-message" style="display: none;"></div>
+                
+                <div class="email-info">
+                    <p>Código enviado a: <span id="maskedEmail"></span></p>
+                </div>
             </div>
         </div>
         
@@ -41,11 +49,11 @@
                 <div class="info-box">
                     <div class="info-content">
                         <div class="info-icon">
-                            <img src="images/market-icon.png" alt="Mercados" class="feature-icon">
+                            <img src="images/two-factors-security.png" alt="Seguridad" class="feature-icon">
                         </div>
                         <div class="info-text">
-                            <h3>Mercados en Tiempo Real</h3>
-                            <p>Accede a datos actualizados de mercados globales, índices bursátiles y cotizaciones en tiempo real para mantenerte informado.</p>
+                            <h3>Seguridad de Dos Factores</h3>
+                            <p>Tu cuenta está protegida con verificación en dos pasos. El código de 6 dígitos se envía a tu correo electrónico registrado para mayor seguridad.</p>
                         </div>
                     </div>
                 </div>
@@ -53,11 +61,11 @@
                 <div class="info-box">
                     <div class="info-content">
                         <div class="info-icon">
-                            <img src="images/technical-analysis-icon.png" alt="Análisis Técnico" class="feature-icon">
+                            <img src="images/secure-access-icon.png" alt="Análisis" class="feature-icon">
                         </div>
                         <div class="info-text">
-                            <h3>Análisis Técnico Avanzado</h3>
-                            <p>Utiliza herramientas profesionales de análisis técnico, indicadores personalizables y gráficos interactivos para identificar oportunidades.</p>
+                            <h3>Acceso Seguro</h3>
+                            <p>Una vez verificado, tendrás acceso completo a todas las herramientas de análisis financiero y gestión de portafolios de FinScope.</p>
                         </div>
                     </div>
                 </div>
@@ -65,11 +73,11 @@
                 <div class="info-box">
                     <div class="info-content">
                         <div class="info-icon">
-                            <img src="images/risk-management-icon.png" alt="Gestión de Riesgos" class="feature-icon">
+                            <img src="images/dashboard-mockup.png" alt="Dashboard" class="feature-icon">
                         </div>
                         <div class="info-text">
-                            <h3>Gestión de Riesgos</h3>
-                            <p>Implementa estrategias de gestión de riesgos, establece stop-loss automáticos y monitorea la exposición de tu portafolio.</p>
+                            <h3>Dashboard Personalizado</h3>
+                            <p>Accede a tu dashboard personalizado con métricas en tiempo real, gráficas interactivas y reportes detallados de tu portafolio financiero.</p>
                         </div>
                     </div>
                 </div>
