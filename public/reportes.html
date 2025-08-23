@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinScope - Reportes</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body class="reportes-page">
+    <div class="reportes-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">📊</div>
+                    <div class="logo-text">
+                        <span class="core">Fin</span><span class="wall">Scope</span>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="dashboard.html"><i>🏠</i> Dashboard</a></li>
+                    <li><a href="estadisticas.html"><i>📈</i> Estadísticas</a></li>
+                    <li><a href="transacciones.html"><i>💰</i> Transacciones</a></li>
+                    <li><a href="reportes.html" class="active"><i>📊</i> Reportes</a></li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="btn btn-secondary" style="width: 100%; margin: 0 2rem;">
+                    <i>🚪</i> Cerrar Sesión
+                </button>
+            </div>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <header class="page-header">
+                <h1 class="page-title">Generación de Reportes</h1>
+                <p class="page-subtitle">Crea y exporta reportes financieros personalizados</p>
+            </header>
+
+            <!-- Herramientas de Exportación -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Exportar Datos</h2>
+                </div>
+                <div class="export-tools">
+                    <button id="exportPDF" class="btn btn-primary">
+                        <i>📄</i> Exportar a PDF
+                    </button>
+                    <button id="exportExcel" class="btn btn-success">
+                        <i>📊</i> Exportar a Excel
+                    </button>
+                    <button id="exportCSV" class="btn btn-secondary">
+                        <i>📋</i> Exportar a CSV
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filtros de Reporte -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Configuración del Reporte</h2>
+                </div>
+                <div class="report-filters">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="dateFrom">Fecha Desde:</label>
+                            <input type="date" id="dateFrom">
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="dateTo">Fecha Hasta:</label>
+                            <input type="date" id="dateTo">
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="reportType">Tipo de Reporte:</label>
+                            <select id="reportType">
+                                <option value="completo">Reporte Completo</option>
+                                <option value="ingresos">Solo Ingresos</option>
+                                <option value="gastos">Solo Gastos</option>
+                                <option value="categoria">Por Categoría</option>
+                                <option value="mensual">Resumen Mensual</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="categoryFilter">Categoría:</label>
+                            <select id="categoryFilter">
+                                <option value="">Todas las categorías</option>
+                                <option value="alimentacion">Alimentación</option>
+                                <option value="transporte">Transporte</option>
+                                <option value="entretenimiento">Entretenimiento</option>
+                                <option value="servicios">Servicios</option>
+                                <option value="salario">Salario</option>
+                                <option value="inversiones">Inversiones</option>
+                                <option value="otros">Otros</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-actions">
+                        <button id="generateReport" class="btn btn-primary">
+                            <i>🔍</i> Generar Reporte
+                        </button>
+                        <button id="clearFilters" class="btn btn-secondary">
+                            <i>🗑️</i> Limpiar Filtros
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vista Previa del Reporte -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Vista Previa del Reporte</h2>
+                </div>
+                <div id="reportPreview" class="report-preview">
+                    <div class="preview-placeholder">
+                        <p>Selecciona los filtros y genera un reporte para ver la vista previa</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Historial de Reportes -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Historial de Reportes Generados</h2>
+                </div>
+                <div id="reportsHistory" class="reports-history">
+                    <div class="history-item">
+                        <div class="history-info">
+                            <h4>Reporte Mensual - Diciembre 2024</h4>
+                            <p>Generado el 15/12/2024 a las 14:30</p>
+                            <span class="report-type">Resumen Mensual</span>
+                        </div>
+                        <div class="history-actions">
+                            <button class="btn btn-secondary btn-sm">📄 PDF</button>
+                            <button class="btn btn-secondary btn-sm">📊 Excel</button>
+                            <button class="btn btn-secondary btn-sm">🗑️</button>
+                        </div>
+                    </div>
+                    
+                    <div class="history-item">
+                        <div class="history-info">
+                            <h4>Análisis de Gastos por Categoría</h4>
+                            <p>Generado el 10/12/2024 a las 09:15</p>
+                            <span class="report-type">Por Categoría</span>
+                        </div>
+                        <div class="history-actions">
+                            <button class="btn btn-secondary btn-sm">📄 PDF</button>
+                            <button class="btn btn-secondary btn-sm">📊 Excel</button>
+                            <button class="btn btn-secondary btn-sm">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="reportes.js"></script>
+</body>
+</html>

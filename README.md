@@ -1,4 +1,4 @@
-# 🚀 FinanzApp - Aplicación de Finanzas Personales
+# 🚀 FinScope - Aplicación de Finanzas Personales
 
 Una aplicación web moderna y completa para el control de finanzas personales, construida con HTML, CSS (TailwindCSS) y JavaScript vanilla.
 
@@ -247,6 +247,6 @@ Si tienes alguna pregunta o necesitas ayuda:
 
 ---
 
-**¡Gracias por usar FinanzApp! 🎉**
+**¡Gracias por usar FinScope! 🎉**
 
 *Una aplicación construida con ❤️ para el control financiero personal.*

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinScope - Estadísticas</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="estadisticas-page">
+    <div class="estadisticas-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">📊</div>
+                    <div class="logo-text">
+                        <span class="core">Fin</span><span class="wall">Scope</span>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="dashboard.html"><i>🏠</i> Dashboard</a></li>
+                    <li><a href="estadisticas.html" class="active"><i>📈</i> Estadísticas</a></li>
+                    <li><a href="transacciones.html"><i>💰</i> Transacciones</a></li>
+                    <li><a href="reportes.html"><i>📊</i> Reportes</a></li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="btn btn-secondary" style="width: 100%; margin: 0 2rem;">
+                    <i>🚪</i> Cerrar Sesión
+                </button>
+            </div>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <header class="page-header">
+                <h1 class="page-title">Estadísticas Financieras</h1>
+                <p class="page-subtitle">Análisis detallado de tus finanzas personales</p>
+            </header>
+
+            <!-- Métricas Principales -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Métricas Principales</h2>
+                </div>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon">📊</div>
+                        <div class="metric-content">
+                            <h3>Total de Transacciones</h3>
+                            <p class="metric-value">156</p>
+                            <span class="metric-change positive">+23 este mes</span>
+                        </div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-icon">💰</div>
+                        <div class="metric-content">
+                            <h3>Promedio Mensual</h3>
+                            <p class="metric-value">$4,250.00</p>
+                            <span class="metric-change positive">+8.5%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-icon">🎯</div>
+                        <div class="metric-content">
+                            <h3>Meta de Ahorro</h3>
+                            <p class="metric-value">75%</p>
+                            <span class="metric-change positive">+5% este mes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráficos -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Análisis de Gastos por Categoría</h2>
+                </div>
+                <div style="height: 400px;">
+                    <canvas id="expensesChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Evolución del Balance</h2>
+                </div>
+                <div style="height: 400px;">
+                    <canvas id="balanceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Distribución de Ingresos vs Gastos -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Distribución Ingresos vs Gastos</h2>
+                </div>
+                <div style="height: 400px;">
+                    <canvas id="incomeExpenseChart"></canvas>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="estadisticas.js"></script>
+</body>
+</html>
