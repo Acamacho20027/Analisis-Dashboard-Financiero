@@ -1,14 +1,25 @@
 # 🚀 FinScope - Aplicación de Finanzas Personales
 
-Una aplicación web moderna y completa para el control de finanzas personales, construida con HTML, CSS y JavaScript vanilla. FinScope ofrece un sistema completo de gestión financiera con interfaz intuitiva y funcionalidades avanzadas.
+Una aplicación web moderna y completa para el control de finanzas personales, construida con **Node.js, SQL Server y JavaScript**. FinScope ofrece un sistema completo de gestión financiera con interfaz intuitiva, funcionalidades avanzadas y **base de datos real integrada**.
+
+## 🆕 **NUEVO: Base de Datos Real Integrada**
+
+- **SQL Server** como base de datos principal
+- **Sistema de usuarios real** con registro y autenticación
+- **Datos persistentes** y seguros en la nube
+- **API REST completa** para todas las operaciones
+- **Autenticación JWT** con tokens seguros
+- **Verificación por email** con códigos reales
 
 ## ✨ Características Principales
 
 ### 🔐 Sistema de Autenticación Robusto
 - **Login seguro** con usuario/contraseña
-- **Verificación de dos factores (2FA)** con código temporal
-- **Sesiones persistentes** con localStorage
+- **Verificación de dos factores (2FA)** con código por email real
+- **Sesiones persistentes** con JWT tokens
 - **Flujo de autenticación completo** y seguro
+- **Registro de usuarios** con validación completa
+- **Base de datos SQL Server** para almacenamiento seguro
 
 ### 📊 Dashboard Financiero Inteligente
 - **Resumen financiero completo** con balance total, ingresos y gastos del mes
@@ -23,7 +34,8 @@ Una aplicación web moderna y completa para el control de finanzas personales, c
 - **Tipos de transacción**: Ingresos, Gastos y Transferencias
 - **Sistema de filtros** por tipo y categoría
 - **Listado dinámico** con scroll habilitado
-- **Almacenamiento local** persistente y confiable
+- **Base de datos SQL Server** para almacenamiento persistente y seguro
+- **API REST completa** para operaciones CRUD
 
 ### 📈 Estadísticas y Análisis
 - **Gráficos interactivos** usando Chart.js
@@ -48,18 +60,28 @@ Una aplicación web moderna y completa para el control de finanzas personales, c
 
 ## 🛠️ Tecnologías Utilizadas
 
-- **Frontend**: HTML5, CSS3, JavaScript ES6+
-- **Gráficas**: Chart.js para visualizaciones interactivas
-- **Exportación PDF**: jsPDF para reportes profesionales
-- **Exportación Excel**: SheetJS para análisis de datos
-- **Almacenamiento**: localStorage para persistencia de datos
-- **Diseño**: CSS personalizado con sistema de grid y flexbox
+### **Backend (NUEVO)**
+- **Node.js** con Express.js para el servidor
+- **SQL Server** como base de datos principal
+- **JWT** para autenticación segura
+- **bcryptjs** para encriptación de contraseñas
+- **Nodemailer** para envío de emails de verificación
+- **API REST** completa para todas las operaciones
+
+### **Frontend**
+- **HTML5, CSS3, JavaScript ES6+** para la interfaz
+- **Chart.js** para visualizaciones interactivas
+- **jsPDF** para exportación de reportes PDF
+- **SheetJS** para exportación de reportes Excel
+- **CSS personalizado** con sistema de grid y flexbox
 
 ## 🚀 Instalación y Uso
 
 ### Prerrequisitos
-- Navegador web moderno (Chrome, Firefox, Safari, Edge)
-- Servidor web local (opcional, para desarrollo)
+- **Node.js** (versión 16 o superior)
+- **SQL Server** instalado y configurado
+- **Navegador web moderno** (Chrome, Firefox, Safari, Edge)
+- **Git** para clonar el repositorio
 
 ### 1. Clonar el repositorio
 ```bash
@@ -67,22 +89,51 @@ git clone <url-del-repositorio>
 cd Proyecto_Analisis_Financiero
 ```
 
-### 2. Ejecutar la aplicación
-- **Opción 1**: Abrir `public/index.html` directamente en el navegador
-- **Opción 2**: Usar un servidor local (recomendado para desarrollo)
+### 2. Configurar la base de datos
+```bash
+# Ejecutar el script SQL en SQL Server Management Studio
+database/FinScopeDB_Creation.sql
 
-### 3. Acceder a la aplicación
-- **URL**: `public/index.html`
-- **Login**: Formulario de autenticación
+# Configurar variables de entorno
+cp config.env .env
+# Editar .env con tus credenciales de SQL Server y email
+```
+
+### 3. Instalar dependencias
+```bash
+npm install
+```
+
+### 4. Ejecutar la aplicación
+```bash
+npm run dev
+```
+
+### 5. Acceder a la aplicación
+- **URL**: `http://localhost:3000`
+- **Registro**: `http://localhost:3000/register`
+- **Login**: `http://localhost:3000`
 - **Dashboard**: Panel principal tras verificación 2FA
 
-## 🔑 Credenciales de Demo
+## 🔑 Sistema de Usuarios Real
 
-Para probar la aplicación, usa estas credenciales:
+### **Registro de Usuarios**
+- **Página de registro** completa con validaciones
+- **Verificación por email** con códigos reales
+- **Encriptación de contraseñas** con bcrypt
+- **Base de datos SQL Server** para almacenamiento seguro
 
-- **Usuario**: `demo@finscope.com`
-- **Contraseña**: `123456`
-- **Código 2FA**: `123456` (se genera automáticamente)
+### **Login y Autenticación**
+- **Sistema de login** integrado con base de datos
+- **Verificación 2FA** por email real
+- **Tokens JWT** para sesiones seguras
+- **Middleware de autenticación** para rutas protegidas
+
+### **Para Probar la Aplicación**
+1. **Registra un usuario** en `/register`
+2. **Verifica tu email** con el código recibido
+3. **Haz login** con tus credenciales
+4. **Accede al dashboard** completo
 
 ## 📱 Funcionalidades Detalladas
 
@@ -208,26 +259,53 @@ Para probar la aplicación, usa estas credenciales:
 4. **Agregar autenticación** robusta con backend
 5. **Configurar monitoreo** y logs de errores
 
+## 🔌 API REST Completa
+
+### **Endpoints de Autenticación**
+- **POST** `/api/register` - Registro de usuarios
+- **POST** `/api/login` - Autenticación de usuarios
+- **POST** `/api/verify` - Verificación de códigos 2FA
+- **GET** `/api/profile` - Perfil del usuario autenticado
+
+### **Endpoints de Transacciones**
+- **POST** `/api/transactions` - Crear nueva transacción
+- **GET** `/api/transactions` - Obtener transacciones del usuario
+- **GET** `/api/transactions/summary` - Resumen de transacciones
+- **GET** `/api/transactions/expenses-by-category` - Gastos por categoría
+
+### **Endpoints de Categorías**
+- **GET** `/api/categories` - Obtener categorías disponibles
+
+### **Seguridad y Autenticación**
+- **Middleware JWT** para rutas protegidas
+- **Encriptación bcrypt** para contraseñas
+- **Validación de datos** en todos los endpoints
+- **Manejo de errores** robusto y descriptivo
+
 ## 🧪 Testing y Funcionalidades
 
 ### Funcionalidades a Probar
-- [x] Login con credenciales válidas
-- [x] Verificación 2FA exitosa
-- [x] Navegación entre todas las secciones
-- [x] Agregar nueva transacción
-- [x] Validación de formularios
-- [x] Filtrado de transacciones
-- [x] Exportación a PDF/Excel/CSV
-- [x] Responsividad en diferentes dispositivos
-- [x] Persistencia de datos en localStorage
-- [x] Sistema de scroll en todas las páginas
+- [x] **Registro de usuarios** con validación completa
+- [x] **Login con base de datos real** y verificación de credenciales
+- [x] **Verificación 2FA por email** con códigos reales
+- [x] **Sistema de autenticación JWT** con tokens seguros
+- [x] **Navegación entre todas las secciones** del sistema
+- [x] **Agregar nueva transacción** con persistencia en SQL Server
+- [x] **Validación de formularios** en frontend y backend
+- [x] **Filtrado de transacciones** con base de datos real
+- [x] **Exportación a PDF/Excel/CSV** desde datos reales
+- [x] **Responsividad en diferentes dispositivos**
+- [x] **Persistencia de datos en SQL Server** con relaciones
+- [x] **Sistema de scroll** en todas las páginas
+- [x] **API REST completa** para todas las operaciones
 
 ### Casos de Uso Principales
-1. **Usuario nuevo**: Login → 2FA → Dashboard vacío → Agregar transacciones
+1. **Usuario nuevo**: Registro → Verificación email → Login → 2FA → Dashboard vacío → Agregar transacciones
 2. **Usuario existente**: Login → 2FA → Dashboard con datos → Gestionar finanzas
-3. **Gestión de transacciones**: Agregar, visualizar, filtrar, exportar
+3. **Gestión de transacciones**: Agregar, visualizar, filtrar, exportar desde base de datos real
 4. **Navegación completa**: Cambiar entre todas las secciones del sistema
-5. **Análisis financiero**: Revisar estadísticas, metas y reportes
+5. **Análisis financiero**: Revisar estadísticas, metas y reportes con datos persistentes
+6. **Administración de usuarios**: Sistema completo de cuentas individuales y seguras
 
 ## 🤝 Contribución
 
@@ -239,8 +317,9 @@ Para probar la aplicación, usa estas credenciales:
 5. **Crear** un Pull Request
 
 ### Áreas de Mejora Identificadas
-- [ ] Implementar base de datos real (MySQL, PostgreSQL, MongoDB)
-- [ ] Agregar autenticación robusta con JWT y refresh tokens
+- [x] **Implementar base de datos real** (SQL Server integrado)
+- [x] **Agregar autenticación robusta** con JWT y verificación 2FA
+- [x] **Sistema de usuarios real** con registro y login
 - [ ] Implementar sincronización en la nube
 - [ ] Agregar más tipos de gráficas y visualizaciones
 - [ ] Implementar sistema de metas personalizables por usuario
@@ -248,6 +327,8 @@ Para probar la aplicación, usa estas credenciales:
 - [ ] Implementar modo oscuro/claro
 - [ ] Agregar sistema de respaldo y restauración
 - [ ] Implementar importación de datos desde archivos externos
+- [ ] Agregar roles y permisos de usuario
+- [ ] Implementar auditoría de cambios
 
 ## 📄 Licencia
 
@@ -274,7 +355,22 @@ Si tienes alguna pregunta o necesitas ayuda:
 
 ## 🔄 Historial de Versiones
 
-### v2.0.0 (Actual)
+### v3.0.0 (Actual) - **Base de Datos Real Integrada**
+- ✅ **Base de datos SQL Server** completamente integrada
+- ✅ **Sistema de usuarios real** con registro y autenticación
+- ✅ **API REST completa** para todas las operaciones
+- ✅ **Autenticación JWT** con tokens seguros
+- ✅ **Verificación 2FA por email** con códigos reales
+- ✅ **Middleware de autenticación** para rutas protegidas
+- ✅ **Encriptación de contraseñas** con bcrypt
+- ✅ **Persistencia de datos** en base de datos relacional
+- ✅ **Sistema de scroll** habilitado en todas las páginas
+- ✅ **Arquitectura multi-página** con sidebar consistente
+- ✅ **Gestión completa de transacciones** con base de datos
+- ✅ **Exportación a múltiples formatos** desde datos reales
+- ✅ **Diseño completamente responsive**
+
+### v2.0.0
 - ✅ Sistema de scroll habilitado en todas las páginas
 - ✅ Refactorización completa a arquitectura multi-página
 - ✅ Sidebar de navegación consistente

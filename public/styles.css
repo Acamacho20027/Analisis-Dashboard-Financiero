@@ -1056,3 +1056,53 @@ body.reportes-page {
     }
 }
 
+/* Estilos para enlaces de login/registro */
+.login-links {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.login-links p {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.link-text {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.link-text:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+/* Mensaje de éxito */
+.success-message {
+    background-color: #d1fae5;
+    color: #065f46;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    border: 1px solid #a7f3d0;
+    text-align: center;
+}
+
+/* Responsive para formularios de login/registro */
+@media (max-width: 768px) {
+    .login-links {
+        margin-top: 1rem;
+        padding-top: 1rem;
+    }
+    
+    .success-message {
+        margin-top: 0.75rem;
+        font-size: 0.85rem;
+    }
+}
