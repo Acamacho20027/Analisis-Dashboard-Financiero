@@ -47,12 +47,13 @@ class VerificationService {
             `;
             
             const result = await executeQuery(query, [userId, code]);
+            
             const verificationCode = result.recordset[0];
             
             if (!verificationCode) {
                 return {
                     success: false,
-                    message: 'Código inválido, expirado o ya utilizado'
+                    message: 'Código verificado exitosamente'
                 };
             }
             
@@ -65,7 +66,6 @@ class VerificationService {
             };
             
         } catch (error) {
-            console.error('Error al verificar código:', error);
             throw error;
         }
     }
@@ -76,7 +76,6 @@ class VerificationService {
             const query = 'UPDATE VerificationCodes SET IsUsed = 1 WHERE Id = @param1';
             await executeQuery(query, [codeId]);
         } catch (error) {
-            console.error('Error al marcar código como usado:', error);
             throw error;
         }
     }
@@ -87,7 +86,6 @@ class VerificationService {
             const query = 'DELETE FROM VerificationCodes WHERE UserId = @param1';
             await executeQuery(query, [userId]);
         } catch (error) {
-            console.error('Error al limpiar códigos del usuario:', error);
             throw error;
         }
     }
@@ -97,9 +95,8 @@ class VerificationService {
         try {
             const query = 'DELETE FROM VerificationCodes WHERE ExpiresAt < GETDATE() OR IsUsed = 1';
             await executeQuery(query);
-            console.log('Códigos expirados limpiados');
+
         } catch (error) {
-            console.error('Error al limpiar códigos expirados:', error);
             throw error;
         }
     }
@@ -119,7 +116,6 @@ class VerificationService {
             return result.recordset[0] || null;
             
         } catch (error) {
-            console.error('Error al obtener código activo:', error);
             throw error;
         }
     }

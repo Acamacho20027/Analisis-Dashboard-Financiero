@@ -42,6 +42,56 @@
                 <p class="page-subtitle">Bienvenido a tu panel de control financiero</p>
             </header>
 
+            <!-- Mensajes de estado -->
+            <div id="successMessage" class="success-message" style="display: none;"></div>
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+            <!-- Formulario de Nueva Transacción -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Nueva Transacción</h2>
+                </div>
+                <form id="transaccionForm" class="transaction-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fecha">Fecha:</label>
+                            <input type="date" id="fecha" name="fecha" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="tipo">Tipo:</label>
+                            <select id="tipo" name="tipo" required>
+                                <option value="">Selecciona el tipo</option>
+                                <option value="ingreso">Ingreso</option>
+                                <option value="gasto">Gasto</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="categoria">Categoría:</label>
+                            <select id="categoria" name="categoria" required>
+                                <option value="">Selecciona una categoría</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="monto">Monto:</label>
+                            <input type="number" id="monto" name="monto" step="0.01" min="0" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="descripcion">Descripción (opcional):</label>
+                            <input type="text" id="descripcion" name="descripcion" placeholder="Descripción de la transacción">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <button type="submit" class="btn btn-primary">Agregar Transacción</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
             <!-- Resumen General -->
             <div class="card">
                 <div class="card-header">
@@ -52,8 +102,8 @@
                         <div class="metric-icon">💰</div>
                         <div class="metric-content">
                             <h3>Balance Total</h3>
-                            <p class="metric-value">$25,430.00</p>
-                            <span class="metric-change positive">+12.5%</span>
+                            <p class="metric-value" id="balanceTotal">$0.00</p>
+                            <span class="metric-change positive" id="balanceChange">+0.0%</span>
                         </div>
                     </div>
                     
@@ -61,8 +111,8 @@
                         <div class="metric-icon">📈</div>
                         <div class="metric-content">
                             <h3>Ingresos del Mes</h3>
-                            <p class="metric-value">$8,200.00</p>
-                            <span class="metric-change positive">+8.2%</span>
+                            <p class="metric-value" id="ingresosMes">$0.00</p>
+                            <span class="metric-change positive" id="ingresosChange">+0.0%</span>
                         </div>
                     </div>
                     
@@ -70,19 +120,29 @@
                         <div class="metric-icon">📉</div>
                         <div class="metric-content">
                             <h3>Gastos del Mes</h3>
-                            <p class="metric-value">$3,450.00</p>
-                            <span class="metric-change negative">-5.1%</span>
-                        </div>
+                            <p class="metric-value" id="gastosMes">$0.00</p>
+                            <span class="metric-change negative" id="gastosChange">+0.0%</span>
+                            </div>
                     </div>
                     
                     <div class="metric-card">
                         <div class="metric-icon">🎯</div>
                         <div class="metric-content">
                             <h3>Ahorro del Mes</h3>
-                            <p class="metric-value">$4,750.00</p>
-                            <span class="metric-change positive">+15.3%</span>
+                            <p class="metric-value" id="ahorroMes">$0.00</p>
+                            <span class="metric-change positive" id="ahorroChange">+0.0%</span>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Gráfica de Balance -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Balance Mensual</h2>
+                </div>
+                <div style="height: 300px; position: relative;">
+                    <canvas id="balanceChart"></canvas>
                 </div>
             </div>
 
@@ -173,6 +233,9 @@
         </main>
     </div>
 
+    <script src="config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="dashboard.js"></script>
 </body>
 </html>
+

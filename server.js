@@ -21,6 +21,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
+// Middleware de logging para todas las peticiones
+
+
 // Configuración de Nodemailer
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -35,7 +38,6 @@ connectDB().catch(console.error);
 
 // Manejar cierre graceful del servidor
 process.on('SIGINT', async () => {
-  console.log('\n🔄 Cerrando servidor...');
   await closeDB();
   process.exit(0);
 });
@@ -76,6 +78,208 @@ app.get('/reportes', (req, res) => {
 });
 
 // ===== API RUTAS =====
+
+// ===== TRANSACCIONES =====
+
+// Crear nueva transacción
+app.post('/api/transactions', authenticateToken, async (req, res) => {
+  try {
+    const { amount, type, categoryId, description, transactionDate } = req.body;
+    const userId = req.user.id;
+    
+    // Validación básica
+    if (!amount || !type || !categoryId || !transactionDate) {
+      return res.status(400).json({ 
+        error: 'Todos los campos son requeridos' 
+      });
+    }
+    
+    // Validar tipo de transacción
+    if (!['ingreso', 'gasto'].includes(type)) {
+      return res.status(400).json({ 
+        error: 'Tipo de transacción inválido' 
+      });
+    }
+    
+    // Crear transacción
+    const result = await transactionService.createTransaction({
+      userId,
+      amount: parseFloat(amount),
+      type,
+      categoryId: parseInt(categoryId),
+      description: description || '',
+      transactionDate
+    });
+    
+    res.json({
+      success: true,
+      message: 'Transacción creada exitosamente',
+      transactionId: result.transactionId
+    });
+    
+  } catch (error) {
+    console.error('Error al crear transacción:', error);
+    res.status(500).json({ 
+      error: 'Error interno del servidor' 
+    });
+  }
+});
+
+// Obtener transacciones del usuario
+app.get('/api/transactions', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { type, categoryId, startDate, endDate } = req.query;
+    
+    const filters = {};
+    if (type && type !== 'todas') filters.type = type;
+    if (categoryId) filters.categoryId = parseInt(categoryId);
+    if (startDate) filters.startDate = startDate;
+    if (endDate) filters.endDate = endDate;
+    
+    const transactions = await transactionService.getUserTransactions(userId, filters);
+    
+    res.json({
+      success: true,
+      transactions: transactions
+    });
+    
+  } catch (error) {
+    console.error('Error al obtener transacciones:', error);
+    res.status(500).json({ 
+      error: 'Error interno del servidor' 
+    });
+  }
+});
+
+// Obtener resumen de transacciones para dashboard
+app.get('/api/transactions/summary', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { period = 'month' } = req.query;
+    
+    const summary = await transactionService.getTransactionSummary(userId, period);
+    
+    res.json({
+      success: true,
+      summary: summary
+    });
+    
+  } catch (error) {
+    console.error('Error al obtener resumen:', error);
+    res.status(500).json({ 
+      error: 'Error interno del servidor' 
+    });
+  }
+});
+
+// Obtener gastos por categoría para estadísticas
+app.get('/api/transactions/expenses-by-category', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { period = 'month' } = req.query;
+    
+    const expenses = await transactionService.getExpensesByCategory(userId, period);
+    
+    res.json({
+      success: true,
+      expenses: expenses
+    });
+    
+  } catch (error) {
+    console.error('Error al obtener gastos por categoría:', error);
+    res.status(500).json({ 
+      error: 'Error interno del servidor' 
+    });
+  }
+});
+
+// Actualizar transacción
+app.put('/api/transactions/:id', authenticateToken, async (req, res) => {
+  try {
+    const transactionId = parseInt(req.params.id);
+    const userId = req.user.id;
+    const { amount, type, categoryId, description, transactionDate } = req.body;
+    
+    // Validación básica
+    if (!amount || !type || !categoryId || !transactionDate) {
+      return res.status(400).json({ 
+        error: 'Todos los campos son requeridos' 
+      });
+    }
+    
+    // Actualizar transacción
+    await transactionService.updateTransaction(transactionId, userId, {
+      amount: parseFloat(amount),
+      type,
+      categoryId: parseInt(categoryId),
+      description: description || '',
+      transactionDate
+    });
+    
+    res.json({
+      success: true,
+      message: 'Transacción actualizada exitosamente'
+    });
+    
+  } catch (error) {
+    console.error('Error al actualizar transacción:', error);
+    res.status(500).json({ 
+      error: 'Error interno del servidor' 
+    });
+  }
+});
+
+// Eliminar transacción
+app.delete('/api/transactions/:id', authenticateToken, async (req, res) => {
+  try {
+    const transactionId = parseInt(req.params.id);
+    const userId = req.user.id;
+    
+    await transactionService.deleteTransaction(transactionId, userId);
+    
+    res.json({
+      success: true,
+      message: 'Transacción eliminada exitosamente'
+    });
+    
+  } catch (error) {
+    console.error('Error al eliminar transacción:', error);
+    res.status(500).json({ 
+      error: 'Error interno del servidor' 
+    });
+  }
+});
+
+// ===== CATEGORÍAS =====
+
+// Obtener categorías disponibles
+app.get('/api/categories', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    // Obtener categorías del sistema y del usuario
+    const query = `
+      SELECT Id, Name, Type, Color, IsDefault
+      FROM Categories 
+      WHERE UserId IS NULL OR UserId = @param1
+      ORDER BY IsDefault DESC, Name ASC
+    `;
+    
+    const result = await require('./config/database').executeQuery(query, [userId]);
+    
+    res.json({
+      success: true,
+      categories: result.recordset
+    });
+    
+  } catch (error) {
+    console.error('Error al obtener categorías:', error);
+    res.status(500).json({ 
+      error: 'Error interno del servidor' 
+    });
+  }
+});
 
 // Ruta para registro de usuarios
 app.post('/api/register', async (req, res) => {
@@ -194,16 +398,24 @@ app.post('/api/login', async (req, res) => {
 // Ruta para verificar el código
 app.post('/api/verify', async (req, res) => {
   try {
-    const { userId, code } = req.body;
+    const { email, code } = req.body;
     
-    if (!userId || !code) {
+    if (!email || !code) {
       return res.status(400).json({ 
-        error: 'UserId y código son requeridos' 
+        error: 'Email y código son requeridos' 
+      });
+    }
+    
+    // Obtener usuario por email
+    const user = await userService.getUserByEmail(email);
+    if (!user) {
+      return res.status(400).json({ 
+        error: 'Usuario no encontrado' 
       });
     }
     
     // Verificar código
-    const verificationResult = await verificationService.verifyCode(userId, code);
+    const verificationResult = await verificationService.verifyCode(user.Id, code);
     
     if (!verificationResult.success) {
       return res.status(400).json({ 
@@ -212,34 +424,35 @@ app.post('/api/verify', async (req, res) => {
     }
     
     // Marcar usuario como verificado
-    await userService.verifyUser(userId);
+    await userService.verifyUser(user.Id);
     
     // Obtener usuario actualizado
-    const user = await userService.getUserById(userId);
+    const updatedUser = await userService.getUserById(user.Id);
     
     // Generar token JWT
     const token = userService.generateToken({
-      id: user.Id,
-      email: user.Email,
-      firstName: user.FirstName,
-      lastName: user.LastName
+      id: updatedUser.Id,
+      email: updatedUser.Email,
+      firstName: updatedUser.FirstName,
+      lastName: updatedUser.LastName
     });
     
-    res.json({ 
+    const responseData = { 
       success: true, 
       message: 'Código verificado exitosamente',
       token: token,
       user: {
-        id: user.Id,
-        email: user.Email,
-        firstName: user.FirstName,
-        lastName: user.LastName,
+        id: updatedUser.Id,
+        email: updatedUser.Email,
+        firstName: updatedUser.FirstName,
+        lastName: updatedUser.LastName,
         isVerified: true
       }
-    });
+    };
+    
+    res.json(responseData);
     
   } catch (error) {
-    console.error('Error en verificación:', error);
     res.status(500).json({ 
       error: 'Error al verificar el código',
       message: error.message 
@@ -406,7 +619,5 @@ app.get('/api/categories', async (req, res) => {
 
 // Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-  console.log(`📊 Base de datos: ${process.env.DB_NAME || 'FinScopeDB'}`);
-  console.log(`🔐 JWT Secret: ${process.env.JWT_SECRET ? 'Configurado' : 'Por defecto'}`);
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

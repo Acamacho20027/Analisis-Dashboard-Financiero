@@ -1,4 +1,14 @@
-// Lógica de verificación para FinScope
+// Lógica de verificación simple para FinScope
+
+// Configuración local simple
+const LOCAL_CONFIG = {
+    AUTH: {
+        TOKEN_KEY: 'authToken',
+        USER_KEY: 'usuarioAutenticado',
+        USER_DATA_KEY: 'userData'
+    }
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     const verifyForm = document.getElementById('verifyForm');
     const errorMessage = document.getElementById('errorMessage');
@@ -10,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const maskedEmail = localStorage.getItem('maskedEmail');
     
     if (!userEmail) {
-        // Si no hay email, redirigir al login
         window.location.href = 'index.html';
         return;
     }
@@ -21,12 +30,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Configurar input del código para solo números
-    const codeInput = document.getElementById('code'); // Corregido: usar 'code' en lugar de 'verificationCode'
+    const codeInput = document.getElementById('code');
     if (!codeInput) {
-        console.error('No se encontró el input del código de verificación');
         return;
     }
     
+    // Evento input para auto-submit
     codeInput.addEventListener('input', function(e) {
         // Solo permitir números
         this.value = this.value.replace(/[^0-9]/g, '');
@@ -36,21 +45,28 @@ document.addEventListener('DOMContentLoaded', function() {
         if (successMessage) successMessage.style.display = 'none';
         
         // Auto-submit cuando se complete el código
-        if (this.value.length === 6) {
+        if (this.value.length === 6 && !verifyForm.submitting) {
             verifyForm.dispatchEvent(new Event('submit'));
         }
     });
     
+    // Evento submit del formulario
     verifyForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
+        // Prevenir doble enví
+        if (this.submitting) {
+            return;
+        }
+        
+        this.submitting = true;
+        
         const code = codeInput.value.trim();
-        console.log('Formulario enviado con código:', code);
-        console.log('Email del usuario:', userEmail);
         
         // Validación básica
         if (!code || code.length !== 6) {
             showError('Por favor, ingresa un código de 6 dígitos');
+            this.submitting = false;
             return;
         }
         
@@ -61,34 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.textContent = 'Verificando...';
             submitBtn.disabled = true;
             
-            console.log('Enviando solicitud de verificación...');
-            
-            // VERIFICACIÓN LOCAL TEMPORAL - Comentar esta sección cuando el servidor funcione
-            // Simular verificación exitosa para pruebas
-            console.log('Usando verificación local temporal');
-            setTimeout(() => {
-                console.log('Verificación exitosa (local)');
-                showSuccess('Código verificado exitosamente');
-                
-                // Establecer autenticación para el dashboard
-                localStorage.setItem('usuarioAutenticado', 'true');
-                localStorage.setItem('username', userEmail);
-                
-                // Limpiar localStorage temporal
-                localStorage.removeItem('userEmail');
-                localStorage.removeItem('maskedEmail');
-                
-                // Redirigir al dashboard después de verificación exitosa
-                console.log('Verificación exitosa, redirigiendo al dashboard...');
-                setTimeout(() => {
-                    console.log('Redirigiendo a: dashboard.html');
-                    window.location.href = 'dashboard.html';
-                }, 2000);
-            }, 1000);
-            
-            // DESCOMENTAR ESTA SECCIÓN CUANDO EL SERVIDOR FUNCIONE
-            /*
-            // Enviar código al servidor
             const response = await fetch('/api/verify', {
                 method: 'POST',
                 headers: {
@@ -97,46 +85,60 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify({ email: userEmail, code: code })
             });
             
-            console.log('Respuesta del servidor:', response.status, response.statusText);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             
             const data = await response.json();
-            console.log('Datos de respuesta:', data);
             
             if (data.success) {
-                console.log('Verificación exitosa');
                 showSuccess('Código verificado exitosamente');
                 
-                // Establecer autenticación para el dashboard
-                localStorage.setItem('usuarioAutenticado', 'true');
-                localStorage.setItem('username', userEmail);
+                try {
+                    localStorage.setItem(LOCAL_CONFIG.AUTH.USER_KEY, 'true');
+                    localStorage.setItem(LOCAL_CONFIG.AUTH.TOKEN_KEY, data.token);
+                    localStorage.setItem(LOCAL_CONFIG.AUTH.USER_DATA_KEY, JSON.stringify(data.user));
+                    
+                } catch (localStorageError) {
+                    throw new Error('Error al configurar la autenticación');
+                }
                 
                 // Limpiar localStorage temporal
                 localStorage.removeItem('userEmail');
                 localStorage.removeItem('maskedEmail');
                 
                 // Redirigir al dashboard después de verificación exitosa
-                console.log('Verificación exitosa, redirigiendo al dashboard...');
                 setTimeout(() => {
-                    console.log('Redirigiendo a: dashboard.html');
                     window.location.href = 'dashboard.html';
                 }, 2000);
                 
             } else {
-                console.log('Verificación fallida:', data.error);
                 showError(data.error || 'Código incorrecto');
+                
+                // Limpiar código para evitar reutilización
                 codeInput.value = '';
                 codeInput.focus();
+                
+                // Resetear flag de enví
+                this.submitting = false;
             }
-            */
             
         } catch (error) {
-            console.error('Error en la verificación:', error);
-            showError('Error de conexión. Por favor, intenta de nuevo.');
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                showError('Error de conexión con el servidor. Verifica que el servidor esté ejecutándose.');
+            } else if (error.message.includes('HTTP error')) {
+                showError(`Error del servidor: ${error.message}`);
+            } else {
+                showError(`Error inesperado: ${error.message}`);
+            }
         } finally {
-            // Restaurar botón
+            // Restaurar botón y resetear flag
             const submitBtn = verifyForm.querySelector('button[type="submit"]');
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
+            
+            // Resetear flag de enví
+            this.submitting = false;
         }
     });
     
@@ -150,6 +152,8 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 errorMessage.style.display = 'none';
             }, 5000);
+        } else {
+            alert(message);
         }
     }
     
@@ -158,6 +162,8 @@ document.addEventListener('DOMContentLoaded', function() {
             successMessage.textContent = message;
             successMessage.style.display = 'block';
             if (errorMessage) errorMessage.style.display = 'none';
+        } else {
+            alert(message);
         }
     }
     
@@ -193,4 +199,5 @@ document.addEventListener('DOMContentLoaded', function() {
     backButton.addEventListener('mouseleave', function() {
         this.style.backgroundColor = '#f0f0f0';
     });
+    
 });

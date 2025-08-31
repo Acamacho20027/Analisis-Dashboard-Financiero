@@ -75,7 +75,6 @@ class UserService {
             };
             
         } catch (error) {
-            console.error('Error en autenticación:', error);
             throw error;
         }
     }
@@ -85,9 +84,10 @@ class UserService {
         try {
             const query = 'SELECT * FROM Users WHERE Email = @param1';
             const result = await executeQuery(query, [email]);
-            return result.recordset[0] || null;
+            
+            const user = result.recordset[0] || null;
+            return user;
         } catch (error) {
-            console.error('Error al obtener usuario por email:', error);
             throw error;
         }
     }
@@ -99,7 +99,6 @@ class UserService {
             const result = await executeQuery(query, [userId]);
             return result.recordset[0] || null;
         } catch (error) {
-            console.error('Error al obtener usuario por ID:', error);
             throw error;
         }
     }
@@ -110,7 +109,6 @@ class UserService {
             const query = 'UPDATE Users SET LastLoginAt = GETDATE() WHERE Id = @param1';
             await executeQuery(query, [userId]);
         } catch (error) {
-            console.error('Error al actualizar último login:', error);
             throw error;
         }
     }
@@ -122,7 +120,6 @@ class UserService {
             await executeQuery(query, [userId]);
             return true;
         } catch (error) {
-            console.error('Error al verificar usuario:', error);
             throw error;
         }
     }
