@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Configurar logout
     document.getElementById('logoutBtn').addEventListener('click', function() {
         localStorage.removeItem('usuarioAutenticado');
-        window.location.href = 'index.html';
+        window.location.href = '/views/index.html';
     });
     
     // Establecer fechas por defecto

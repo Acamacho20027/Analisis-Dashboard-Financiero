@@ -65,8 +65,8 @@ function handleAuthError() {
     localStorage.removeItem(CONFIG.AUTH.USER_DATA_KEY);
     
     // Redirigir al login
-    if (window.location.pathname !== '/index.html' && window.location.pathname !== '/') {
-        window.location.href = 'index.html';
+    if (window.location.pathname !== '/views/index.html' && window.location.pathname !== '/') {
+        window.location.href = '/views/index.html';
     }
 }
 
@@ -78,7 +78,7 @@ function logout() {
     localStorage.removeItem('transacciones');
     localStorage.removeItem('categories');
     
-    window.location.href = 'index.html';
+    window.location.href = '/views/index.html';
 }
 
 // Función para mostrar mensajes de error

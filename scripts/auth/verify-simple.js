@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const maskedEmail = localStorage.getItem('maskedEmail');
     
     if (!userEmail) {
-        window.location.href = 'index.html';
+        window.location.href = '/views/index.html';
         return;
     }
     
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Redirigir al dashboard después de verificación exitosa
                 setTimeout(() => {
-                    window.location.href = 'dashboard.html';
+                    window.location.href = '/views/dashboard.html';
                 }, 2000);
                 
             } else {
@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
     backButton.addEventListener('click', function() {
         localStorage.removeItem('userEmail');
         localStorage.removeItem('maskedEmail');
-        window.location.href = 'index.html';
+        window.location.href = '/views/index.html';
     });
     
     document.body.appendChild(backButton);

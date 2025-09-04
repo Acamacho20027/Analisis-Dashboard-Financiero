@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 localStorage.setItem('maskedEmail', data.maskedEmail);
                 
                 // Redirigir a la pantalla de espera
-                window.location.href = 'espera.html';
+                window.location.href = '/views/espera.html';
             } else {
                 showError(data.error || 'Error al procesar el login');
             }

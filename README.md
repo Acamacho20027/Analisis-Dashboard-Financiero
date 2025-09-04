@@ -58,6 +58,22 @@ Una aplicación web moderna y completa para el control de finanzas personales, c
 - **Metas predefinidas** (Vacaciones, Fondo de Emergencia, Nuevo Auto)
 - **Progreso en tiempo real** del ahorro
 
+## 🗂️ Reorganización de Estructura (v3.1.0)
+
+### **Mejoras en la Organización**
+- **📁 Separación clara de responsabilidades**: Vistas, scripts y estilos en carpetas dedicadas
+- **🔧 Mantenibilidad mejorada**: Código organizado por funcionalidad para fácil mantenimiento
+- **📈 Escalabilidad**: Estructura preparada para futuras funcionalidades
+- **🎯 Navegación optimizada**: Rutas absolutas para mejor rendimiento
+- **⚡ Servidor Express configurado**: Servicio de archivos estáticos optimizado
+
+### **Beneficios de la Nueva Estructura**
+- **Desarrollo más eficiente**: Localización rápida de archivos por funcionalidad
+- **Colaboración mejorada**: Estructura clara para trabajo en equipo
+- **Debugging simplificado**: Archivos organizados por módulos específicos
+- **Deployment optimizado**: Configuración de servidor para producción
+- **Código más limpio**: Separación de responsabilidades clara
+
 ## 🛠️ Tecnologías Utilizadas
 
 ### **Backend (NUEVO)**
@@ -353,9 +369,54 @@ Si tienes alguna pregunta o necesitas ayuda:
 2. **Revisar la documentación** del código en los comentarios
 3. **Contactar al equipo** de desarrollo directamente
 
+## 📁 Estructura del Proyecto
+
+```
+Proyecto_Analisis_Financiero/
+├── views/                    # Vistas HTML organizadas
+│   ├── index.html           # Página de login
+│   ├── register.html        # Página de registro
+│   ├── verify.html          # Página de verificación 2FA
+│   ├── espera.html          # Página de espera
+│   ├── dashboard.html       # Dashboard principal
+│   ├── estadisticas.html    # Página de estadísticas
+│   ├── transacciones.html   # Gestión de transacciones
+│   └── reportes.html        # Generación de reportes
+├── scripts/                 # Archivos JavaScript organizados
+│   ├── auth/                # Autenticación
+│   │   ├── register.js
+│   │   └── verify-simple.js
+│   ├── dashboard/           # Dashboard
+│   │   └── dashboard.js
+│   ├── estadisticas/        # Estadísticas
+│   │   └── estadisticas.js
+│   ├── transacciones/       # Transacciones
+│   │   └── transacciones.js
+│   ├── reportes/            # Reportes
+│   │   └── reportes.js
+│   └── shared/              # Archivos compartidos
+│       ├── config.js
+│       └── script.js
+├── styles/                  # Archivos CSS
+│   └── styles.css
+├── public/                  # Recursos estáticos
+│   └── images/              # Imágenes del proyecto
+├── services/                # Servicios del backend
+├── middleware/              # Middleware de autenticación
+├── config/                  # Configuración de base de datos
+└── database/                # Scripts SQL
+```
+
 ## 🔄 Historial de Versiones
 
-### v3.0.0 (Actual) - **Base de Datos Real Integrada**
+### v3.1.0 (Actual) - **Estructura Reorganizada y Optimizada**
+- ✅ **Estructura de carpetas reorganizada** para mejor organización
+- ✅ **Separación clara** entre vistas, scripts y estilos
+- ✅ **Archivos JavaScript organizados** por funcionalidad
+- ✅ **Rutas optimizadas** con servidor Express configurado
+- ✅ **Navegación mejorada** entre todas las páginas
+- ✅ **Mantenibilidad mejorada** del código
+- ✅ **Escalabilidad** para futuras funcionalidades
 - ✅ **Base de datos SQL Server** completamente integrada
 - ✅ **Sistema de usuarios real** con registro y autenticación
 - ✅ **API REST completa** para todas las operaciones
@@ -369,6 +430,8 @@ Si tienes alguna pregunta o necesitas ayuda:
 - ✅ **Gestión completa de transacciones** con base de datos
 - ✅ **Exportación a múltiples formatos** desde datos reales
 - ✅ **Diseño completamente responsive**
+
+### v3.0.0 - **Base de Datos Real Integrada**
 
 ### v2.0.0
 - ✅ Sistema de scroll habilitado en todas las páginas

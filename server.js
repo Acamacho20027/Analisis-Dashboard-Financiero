@@ -20,6 +20,9 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
+app.use('/styles', express.static('styles'));
+app.use('/scripts', express.static('scripts'));
+app.use('/views', express.static('views'));
 
 // Middleware de logging para todas las peticiones
 
@@ -44,37 +47,37 @@ process.on('SIGINT', async () => {
 
 // Ruta principal - Login
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
 // Ruta para registro
 app.get('/register', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'register.html'));
+  res.sendFile(path.join(__dirname, 'views', 'register.html'));
 });
 
 // Ruta para la pantalla de espera
 app.get('/espera', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'espera.html'));
+  res.sendFile(path.join(__dirname, 'views', 'espera.html'));
 });
 
 // Ruta para el dashboard
 app.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+  res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
 });
 
 // Ruta para estadísticas
 app.get('/estadisticas', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'estadisticas.html'));
+  res.sendFile(path.join(__dirname, 'views', 'estadisticas.html'));
 });
 
 // Ruta para transacciones
 app.get('/transacciones', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'transacciones.html'));
+  res.sendFile(path.join(__dirname, 'views', 'transacciones.html'));
 });
 
 // Ruta para reportes
 app.get('/reportes', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'reportes.html'));
+  res.sendFile(path.join(__dirname, 'views', 'reportes.html'));
 });
 
 // ===== API RUTAS =====

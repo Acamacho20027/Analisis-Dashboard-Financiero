@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Verificar autenticación usando el config.js
     if (!isAuthenticated()) {
-        window.location.href = 'index.html';
+        window.location.href = '/views/index.html';
         return;
     }
     
