@@ -15,7 +15,8 @@ body {
 body.dashboard-page,
 body.estadisticas-page,
 body.transacciones-page,
-body.reportes-page {
+body.reportes-page,
+body.categorias-financieras-page {
     height: auto;
     min-height: 100vh;
     overflow: auto;
@@ -30,7 +31,8 @@ body.reportes-page {
 .container.dashboard-container,
 .container.estadisticas-container,
 .container.transacciones-container,
-.container.reportes-container {
+.container.reportes-container,
+.container.categorias-financieras-container {
     height: auto;
     min-height: 100vh;
     flex-direction: column;
@@ -40,7 +42,8 @@ body.reportes-page {
 .dashboard-layout,
 .estadisticas-layout,
 .transacciones-layout,
-.reportes-layout {
+.reportes-layout,
+.categorias-financieras-layout {
     display: flex;
     min-height: 100vh;
     background-color: #f8fafc;
@@ -1131,5 +1134,147 @@ body.reportes-page {
     .success-message {
         margin-top: 0.75rem;
         font-size: 0.85rem;
+    }
+}
+
+/* ===== CATEGORÍAS FINANCIERAS - ESTILOS ESPECÍFICOS ===== */
+
+/* Página de categorías financieras */
+.categorias-financieras-page {
+    background-color: #f8fafc;
+    min-height: 100vh;
+    height: auto;
+    overflow: auto;
+}
+
+.categorias-financieras-layout {
+    display: flex;
+    min-height: 100vh;
+    height: auto;
+    overflow: visible;
+}
+
+/* Grid de información */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 1rem 0;
+}
+
+.info-card {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.info-card .info-icon {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border-radius: 50%;
+    color: white;
+}
+
+.info-card .info-content h3 {
+    margin: 0 0 0.5rem 0;
+    color: #1e293b;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.info-card .info-content p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* Estilos para gráficos de Python */
+.python-chart {
+    width: 100%;
+    height: 400px;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chart-container {
+    position: relative;
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chart-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    background: #f8fafc;
+    border-radius: 8px;
+    color: #64748b;
+    font-size: 1.1rem;
+}
+
+.chart-loading::before {
+    content: "🔄";
+    margin-right: 0.5rem;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Mejoras para las tarjetas de gráficos */
+.card .card-header h2 {
+    color: #1e293b;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.card .card-header {
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Responsive para categorías financieras */
+@media (max-width: 768px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .info-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 1rem;
+    }
+    
+    .info-card .info-icon {
+        margin-bottom: 0.5rem;
+    }
+    
+    .python-chart {
+        height: 300px;
     }
 }

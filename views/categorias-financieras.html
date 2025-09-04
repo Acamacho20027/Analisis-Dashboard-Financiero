@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinScope - Estadísticas</title>
+    <title>FinScope - Categorías Financieras</title>
     <link rel="stylesheet" href="/styles/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="estadisticas-page">
-    <div class="estadisticas-layout">
+<body class="categorias-financieras-page">
+    <div class="categorias-financieras-layout">
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
@@ -23,7 +23,7 @@
             <nav class="sidebar-nav">
                 <ul>
                     <li><a href="/views/dashboard.html"><i>🏠</i> Dashboard</a></li>
-                    <li><a href="/views/estadisticas.html" class="active"><i>📈</i> Estadísticas</a></li>
+                    <li><a href="/views/categorias-financieras.html" class="active"><i>📊</i> Categorías Financieras</a></li>
                     <li><a href="/views/transacciones.html"><i>💰</i> Transacciones</a></li>
                     <li><a href="/views/reportes.html"><i>📊</i> Reportes</a></li>
                 </ul>
@@ -39,40 +39,37 @@
         <!-- Contenido Principal -->
         <main class="main-content">
             <header class="page-header">
-                <h1 class="page-title">Estadísticas Financieras</h1>
-                <p class="page-subtitle">Análisis detallado de tus finanzas personales</p>
+                <h1 class="page-title">Categorías Financieras</h1>
+                <p class="page-subtitle">Análisis inteligente de tus transacciones por categoría</p>
             </header>
 
-            <!-- Métricas Principales -->
+            <!-- Información del Análisis -->
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">Métricas Principales</h2>
+                    <h2 class="card-title">Análisis Inteligente de Categorías</h2>
                 </div>
-                <div class="metrics-grid">
-                    <div class="metric-card">
-                        <div class="metric-icon">📊</div>
-                        <div class="metric-content">
-                            <h3>Total de Transacciones</h3>
-                            <p class="metric-value">156</p>
-                            <span class="metric-change positive">+23 este mes</span>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-icon">🤖</div>
+                        <div class="info-content">
+                            <h3>Análisis con Python</h3>
+                            <p>Procesamiento avanzado con pandas, numpy y scikit-learn</p>
                         </div>
                     </div>
                     
-                    <div class="metric-card">
-                        <div class="metric-icon">💰</div>
-                        <div class="metric-content">
-                            <h3>Promedio Mensual</h3>
-                            <p class="metric-value">$4,250.00</p>
-                            <span class="metric-change positive">+8.5%</span>
+                    <div class="info-card">
+                        <div class="info-icon">📊</div>
+                        <div class="info-content">
+                            <h3>Datos en Tiempo Real</h3>
+                            <p>Análisis basado en tus transacciones reales de la base de datos</p>
                         </div>
                     </div>
                     
-                    <div class="metric-card">
-                        <div class="metric-icon">🎯</div>
-                        <div class="metric-content">
-                            <h3>Meta de Ahorro</h3>
-                            <p class="metric-value">75%</p>
-                            <span class="metric-change positive">+5% este mes</span>
+                    <div class="info-card">
+                        <div class="info-icon">🎯</div>
+                        <div class="info-content">
+                            <h3>Insights Personalizados</h3>
+                            <p>Recomendaciones basadas en tus patrones de gasto</p>
                         </div>
                     </div>
                 </div>
@@ -109,6 +106,6 @@
         </main>
     </div>
 
-    <script src="/scripts/estadisticas/estadisticas.js"></script>
+    <script src="/scripts/categorias-financieras/categorias-financieras.js"></script>
 </body>
 </html>

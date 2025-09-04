@@ -37,12 +37,15 @@ Una aplicación web moderna y completa para el control de finanzas personales, c
 - **Base de datos SQL Server** para almacenamiento persistente y seguro
 - **API REST completa** para operaciones CRUD
 
-### 📈 Estadísticas y Análisis
-- **Gráficos interactivos** usando Chart.js
-- **Análisis de gastos por categoría**
-- **Evolución del balance** en el tiempo
-- **Distribución de ingresos vs gastos**
-- **Métricas detalladas** y comparativas
+### 📊 Categorías Financieras (NUEVO)
+- **Análisis de Gastos por Categoría** con gráficos de dona interactivos
+- **Evolución del Balance** con gráficos de barras acumuladas y gradientes
+- **Distribución Ingresos vs Gastos** con gráficos de barras comparativas
+- **Datos en tiempo real** desde la base de datos SQL Server
+- **Procesamiento inteligente** de transacciones por mes y categoría
+- **Tooltips informativos** con porcentajes y valores formateados
+- **Diseño responsivo** con colores profesionales y efectos hover
+- **Fallback inteligente** a datos de ejemplo si no hay autenticación
 
 ### 📊 Reportes y Exportación
 - **Exportación a PDF** usando jsPDF
@@ -95,9 +98,14 @@ Una aplicación web moderna y completa para el control de finanzas personales, c
 
 ### Prerrequisitos
 - **Node.js** (versión 16 o superior)
+- **Python** (versión 3.8 o superior) - Para análisis avanzado de categorías financieras
+  - Descargar desde: https://www.python.org/downloads/
+  - Asegúrate de marcar "Add Python to PATH" durante la instalación
 - **SQL Server** instalado y configurado
 - **Navegador web moderno** (Chrome, Firefox, Safari, Edge)
 - **Git** para clonar el repositorio
+
+> **Nota**: Si no tienes Python instalado, el módulo de Categorías Financieras funcionará con gráficos básicos usando Chart.js como fallback.
 
 ### 1. Clonar el repositorio
 ```bash
@@ -117,12 +125,27 @@ cp config.env .env
 
 ### 3. Instalar dependencias
 ```bash
+# Instalar dependencias de Node.js
 npm install
+
+# Instalar dependencias de Python
+cd python-backend
+pip install -r requirements.txt
+cd ..
 ```
 
 ### 4. Ejecutar la aplicación
 ```bash
-npm run dev
+# Opción 1: Iniciar ambos servidores automáticamente
+start_servers.bat
+
+# Opción 2: Iniciar manualmente
+# Terminal 1 - Servidor Node.js
+npm start
+
+# Terminal 2 - Servidor Python
+cd python-backend
+python start_python_api.py
 ```
 
 ### 5. Acceder a la aplicación
@@ -379,7 +402,7 @@ Proyecto_Analisis_Financiero/
 │   ├── verify.html          # Página de verificación 2FA
 │   ├── espera.html          # Página de espera
 │   ├── dashboard.html       # Dashboard principal
-│   ├── estadisticas.html    # Página de estadísticas
+│   ├── categorias-financieras.html  # Página de categorías financieras
 │   ├── transacciones.html   # Gestión de transacciones
 │   └── reportes.html        # Generación de reportes
 ├── scripts/                 # Archivos JavaScript organizados
@@ -388,8 +411,8 @@ Proyecto_Analisis_Financiero/
 │   │   └── verify-simple.js
 │   ├── dashboard/           # Dashboard
 │   │   └── dashboard.js
-│   ├── estadisticas/        # Estadísticas
-│   │   └── estadisticas.js
+│   ├── categorias-financieras/  # Categorías Financieras
+│   │   └── categorias-financieras.js
 │   ├── transacciones/       # Transacciones
 │   │   └── transacciones.js
 │   ├── reportes/            # Reportes
@@ -409,7 +432,30 @@ Proyecto_Analisis_Financiero/
 
 ## 🔄 Historial de Versiones
 
-### v3.1.0 (Actual) - **Estructura Reorganizada y Optimizada**
+### v3.3.0 (Actual) - **Categorías Financieras Optimizadas**
+- ✅ **Módulo "Categorías Financieras"** completamente funcional
+- ✅ **Datos reales de base de datos** SQL Server integrados
+- ✅ **Análisis de Gastos por Categoría** con gráficos de dona interactivos
+- ✅ **Evolución del Balance** con gráficos de barras acumuladas y gradientes
+- ✅ **Distribución Ingresos vs Gastos** con gráficos de barras comparativas
+- ✅ **Procesamiento inteligente** de transacciones por mes y categoría
+- ✅ **Tooltips informativos** con porcentajes y valores formateados
+- ✅ **Diseño responsivo** con colores profesionales y efectos hover
+- ✅ **Fallback inteligente** a datos de ejemplo si no hay autenticación
+- ✅ **Logging detallado** para debugging y monitoreo
+- ✅ **Endpoint de prueba** para desarrollo y testing
+
+### v3.2.0 - **Categorías Financieras con Análisis Python**
+- ✅ **Módulo "Categorías Financieras"** completamente renovado
+- ✅ **Backend Python integrado** con pandas, numpy, scikit-learn
+- ✅ **Análisis inteligente** basado en datos reales de transacciones
+- ✅ **Gráficos avanzados** generados con matplotlib y seaborn
+- ✅ **Tres secciones principales**: Gastos por Categoría, Evolución del Balance, Distribución Ingresos vs Gastos
+- ✅ **Clustering y regresión** con scikit-learn para insights personalizados
+- ✅ **API Python independiente** en puerto 5000
+- ✅ **Integración perfecta** entre Node.js y Python
+- ✅ **Visualizaciones responsivas** y estéticamente atractivas
+- ✅ **Análisis en tiempo real** desde base de datos SQL Server
 - ✅ **Estructura de carpetas reorganizada** para mejor organización
 - ✅ **Separación clara** entre vistas, scripts y estilos
 - ✅ **Archivos JavaScript organizados** por funcionalidad
@@ -430,6 +476,8 @@ Proyecto_Analisis_Financiero/
 - ✅ **Gestión completa de transacciones** con base de datos
 - ✅ **Exportación a múltiples formatos** desde datos reales
 - ✅ **Diseño completamente responsive**
+
+### v3.1.0 - **Estructura Reorganizada y Optimizada**
 
 ### v3.0.0 - **Base de Datos Real Integrada**
 

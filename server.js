@@ -65,9 +65,9 @@ app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
 });
 
-// Ruta para estadísticas
-app.get('/estadisticas', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'estadisticas.html'));
+// Ruta para categorías financieras
+app.get('/categorias-financieras', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'categorias-financieras.html'));
 });
 
 // Ruta para transacciones
@@ -550,6 +550,26 @@ app.get('/api/transactions', authenticateToken, requireVerification, async (req,
   }
 });
 
+// Ruta temporal para obtener transacciones sin autenticación (solo para testing)
+app.get('/api/transactions/test', async (req, res) => {
+  try {
+    // Obtener transacciones del usuario ID 2 (usuario de prueba)
+    const transactions = await transactionService.getUserTransactions(2, {});
+    
+    res.json({
+      success: true,
+      transactions: transactions
+    });
+    
+  } catch (error) {
+    console.error('Error al obtener transacciones de prueba:', error);
+    res.status(500).json({ 
+      error: 'Error al obtener transacciones de prueba',
+      message: error.message 
+    });
+  }
+});
+
 // Ruta para obtener resumen de transacciones (protegida)
 app.get('/api/transactions/summary', authenticateToken, requireVerification, async (req, res) => {
   try {
@@ -615,6 +635,122 @@ app.get('/api/categories', async (req, res) => {
     console.error('Error al obtener categorías:', error);
     res.status(500).json({ 
       error: 'Error al obtener categorías',
+      message: error.message 
+    });
+  }
+});
+
+// ===== CATEGORÍAS FINANCIERAS - API PYTHON =====
+
+// Proxy para análisis de gastos por categoría
+app.post('/api/categorias/analisis-gastos', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    // Obtener transacciones del usuario
+    const transactions = await transactionService.getUserTransactions(userId, {});
+    
+    // Retornar datos para que el frontend use Chart.js
+    res.json({
+      success: true,
+      transacciones: transactions,
+      message: 'Usando análisis con Chart.js'
+    });
+    
+  } catch (error) {
+    console.error('Error en análisis de gastos:', error);
+    res.status(500).json({ 
+      error: 'Error al generar análisis de gastos',
+      message: error.message 
+    });
+  }
+});
+
+// Proxy para evolución del balance
+app.post('/api/categorias/evolucion-balance', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    // Obtener transacciones del usuario
+    const transactions = await transactionService.getUserTransactions(userId, {});
+    
+    // Retornar datos para que el frontend use Chart.js
+    res.json({
+      success: true,
+      transacciones: transactions,
+      message: 'Usando análisis con Chart.js'
+    });
+    
+  } catch (error) {
+    console.error('Error en evolución del balance:', error);
+    res.status(500).json({ 
+      error: 'Error al generar evolución del balance',
+      message: error.message 
+    });
+  }
+});
+
+// Proxy para distribución ingresos vs gastos
+app.post('/api/categorias/distribucion-ingresos-gastos', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    // Obtener transacciones del usuario
+    const transactions = await transactionService.getUserTransactions(userId, {});
+    
+    // Retornar datos para que el frontend use Chart.js
+    res.json({
+      success: true,
+      transacciones: transactions,
+      message: 'Usando análisis con Chart.js'
+    });
+    
+  } catch (error) {
+    console.error('Error en distribución ingresos vs gastos:', error);
+    res.status(500).json({ 
+      error: 'Error al generar distribución ingresos vs gastos',
+      message: error.message 
+    });
+  }
+});
+
+// Proxy para resumen de categorías
+app.get('/api/categorias/resumen', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    // Obtener transacciones del usuario
+    const transactions = await transactionService.getUserTransactions(userId, {});
+    
+    // Calcular resumen básico
+    const resumen = {
+      total_transacciones: transactions.length,
+      total_ingresos: 0,
+      total_gastos: 0,
+      balance: 0
+    };
+    
+    transactions.forEach(transaccion => {
+      const monto = parseFloat(transaccion.Amount || transaccion.amount || 0);
+      if (transaccion.Type === 'ingreso' || transaccion.type === 'ingreso') {
+        resumen.total_ingresos += monto;
+      } else if (transaccion.Type === 'gasto' || transaccion.type === 'gasto') {
+        resumen.total_gastos += monto;
+      }
+    });
+    
+    resumen.balance = resumen.total_ingresos - resumen.total_gastos;
+    
+    res.json({
+      success: true,
+      resumen: resumen,
+      message: 'Usando análisis con Chart.js'
+    });
+    
+  } catch (error) {
+    console.error('Error en resumen de categorías:', error);
+    res.status(500).json({ 
+      error: 'Error al obtener resumen de categorías',
       message: error.message 
     });
   }
