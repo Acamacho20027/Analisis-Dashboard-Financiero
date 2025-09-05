@@ -43,18 +43,35 @@ async function apiRequest(endpoint, options = {}) {
     try {
         const response = await fetch(`${CONFIG.API_BASE_URL}${endpoint}`, finalOptions);
         
+        // Intentar parsear la respuesta JSON independientemente del status
+        let responseData;
+        try {
+            responseData = await response.json();
+        } catch (parseError) {
+            console.warn('No se pudo parsear la respuesta JSON:', parseError);
+            responseData = { success: false, error: 'Error de comunicación con el servidor' };
+        }
+        
         if (!response.ok) {
             if (response.status === 401) {
                 // Token expirado o inválido
                 handleAuthError();
-                return;
+                return responseData;
             }
-            throw new Error(`HTTP error! status: ${response.status}`);
+            
+            // Para otros errores, devolver la respuesta parseada en lugar de lanzar excepción
+            console.warn(`HTTP error! status: ${response.status}`, responseData);
+            return responseData;
         }
         
-        return await response.json();
+        return responseData;
     } catch (error) {
-        throw error;
+        console.error('Error en apiRequest:', error);
+        // Devolver un objeto de error en lugar de lanzar excepción
+        return {
+            success: false,
+            error: 'Error de conexión: ' + error.message
+        };
     }
 }
 

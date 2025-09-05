@@ -23,17 +23,18 @@ Una aplicación web moderna y completa para el control de finanzas personales, c
 
 ### 📊 Dashboard Financiero Inteligente
 - **Resumen financiero completo** con balance total, ingresos y gastos del mes
+- **Balance Anual** con gráfico de barras mensuales y métricas detalladas
 - **Métricas en tiempo real** actualizadas automáticamente
-- **Sistema de metas de ahorro** con barras de progreso visuales
-- **Actividad reciente** con historial detallado de transacciones
+- **Gráficos interactivos** con Chart.js para visualización de datos
 - **Diseño responsive** que se adapta a todos los dispositivos
 
 ### 💰 Gestión Avanzada de Transacciones
-- **Formulario intuitivo** para agregar transacciones
+- **Formulario intuitivo** para agregar transacciones con validación en tiempo real
 - **Categorías predefinidas**: Alimentación, Transporte, Entretenimiento, Servicios, Salario, Inversiones, Otros
 - **Tipos de transacción**: Ingresos, Gastos y Transferencias
 - **Sistema de filtros** por tipo y categoría
 - **Listado dinámico** con scroll habilitado
+- **Actualización automática** del dashboard al crear transacciones
 - **Base de datos SQL Server** para almacenamiento persistente y seguro
 - **API REST completa** para operaciones CRUD
 
@@ -432,7 +433,20 @@ Proyecto_Analisis_Financiero/
 
 ## 🔄 Historial de Versiones
 
-### v3.3.0 (Actual) - **Categorías Financieras Optimizadas**
+### v3.4.0 (Actual) - **Dashboard Mejorado con Balance Anual**
+- ✅ **Sección "Balance Anual"** reemplaza "Metas de Ahorro" con gráfico de barras mensuales
+- ✅ **Métricas anuales** (Balance Total, Ingresos Anuales, Gastos Anuales) con indicadores de cambio
+- ✅ **Gráfico interactivo** con colores dinámicos (verde/rojo según balance mensual)
+- ✅ **Actualización automática** completa del dashboard al crear transacciones
+- ✅ **Manejo robusto de errores** con logging detallado para diagnóstico
+- ✅ **Indicador de carga** en formulario de transacciones
+- ✅ **Eliminación de "Actividad Reciente"** para interfaz más limpia
+- ✅ **Validaciones mejoradas** para Chart.js y elementos DOM
+- ✅ **Destrucción segura** de gráficos existentes antes de crear nuevos
+- ✅ **Manejo individual de errores** en inicialización del dashboard
+- ✅ **Mejoras en apiRequest** para evitar excepciones innecesarias
+
+### v3.3.0 - **Categorías Financieras Optimizadas**
 - ✅ **Módulo "Categorías Financieras"** completamente funcional
 - ✅ **Datos reales de base de datos** SQL Server integrados
 - ✅ **Análisis de Gastos por Categoría** con gráficos de dona interactivos

@@ -84,49 +84,6 @@ app.get('/reportes', (req, res) => {
 
 // ===== TRANSACCIONES =====
 
-// Crear nueva transacción
-app.post('/api/transactions', authenticateToken, async (req, res) => {
-  try {
-    const { amount, type, categoryId, description, transactionDate } = req.body;
-    const userId = req.user.id;
-    
-    // Validación básica
-    if (!amount || !type || !categoryId || !transactionDate) {
-      return res.status(400).json({ 
-        error: 'Todos los campos son requeridos' 
-      });
-    }
-    
-    // Validar tipo de transacción
-    if (!['ingreso', 'gasto'].includes(type)) {
-      return res.status(400).json({ 
-        error: 'Tipo de transacción inválido' 
-      });
-    }
-    
-    // Crear transacción
-    const result = await transactionService.createTransaction({
-      userId,
-      amount: parseFloat(amount),
-      type,
-      categoryId: parseInt(categoryId),
-      description: description || '',
-      transactionDate
-    });
-    
-    res.json({
-      success: true,
-      message: 'Transacción creada exitosamente',
-      transactionId: result.transactionId
-    });
-    
-  } catch (error) {
-    console.error('Error al crear transacción:', error);
-    res.status(500).json({ 
-      error: 'Error interno del servidor' 
-    });
-  }
-});
 
 // Obtener transacciones del usuario
 app.get('/api/transactions', authenticateToken, async (req, res) => {
@@ -489,23 +446,33 @@ app.get('/api/profile', authenticateToken, async (req, res) => {
   }
 });
 
-// Ruta para crear transacción (protegida)
-app.post('/api/transactions', authenticateToken, requireVerification, async (req, res) => {
+// Crear nueva transacción
+app.post('/api/transactions', authenticateToken, async (req, res) => {
   try {
     const { amount, type, categoryId, description, transactionDate } = req.body;
+    const userId = req.user.id;
     
+    // Validación básica
     if (!amount || !type || !categoryId || !transactionDate) {
       return res.status(400).json({ 
         error: 'Todos los campos son requeridos' 
       });
     }
     
+    // Validar tipo de transacción
+    if (!['ingreso', 'gasto'].includes(type)) {
+      return res.status(400).json({ 
+        error: 'Tipo de transacción inválido' 
+      });
+    }
+    
+    // Crear transacción
     const result = await transactionService.createTransaction({
-      userId: req.user.id,
-      amount,
+      userId,
+      amount: parseFloat(amount),
       type,
-      categoryId,
-      description,
+      categoryId: parseInt(categoryId),
+      description: description || '',
       transactionDate
     });
     
@@ -524,31 +491,6 @@ app.post('/api/transactions', authenticateToken, requireVerification, async (req
   }
 });
 
-// Ruta para obtener transacciones del usuario (protegida)
-app.get('/api/transactions', authenticateToken, requireVerification, async (req, res) => {
-  try {
-    const filters = {
-      type: req.query.type,
-      categoryId: req.query.categoryId,
-      startDate: req.query.startDate,
-      endDate: req.query.endDate
-    };
-    
-    const transactions = await transactionService.getUserTransactions(req.user.id, filters);
-    
-    res.json({
-      success: true,
-      transactions: transactions
-    });
-    
-  } catch (error) {
-    console.error('Error al obtener transacciones:', error);
-    res.status(500).json({ 
-      error: 'Error al obtener transacciones',
-      message: error.message 
-    });
-  }
-});
 
 // Ruta temporal para obtener transacciones sin autenticación (solo para testing)
 app.get('/api/transactions/test', async (req, res) => {
@@ -570,45 +512,7 @@ app.get('/api/transactions/test', async (req, res) => {
   }
 });
 
-// Ruta para obtener resumen de transacciones (protegida)
-app.get('/api/transactions/summary', authenticateToken, requireVerification, async (req, res) => {
-  try {
-    const period = req.query.period || 'month';
-    const summary = await transactionService.getTransactionSummary(req.user.id, period);
-    
-    res.json({
-      success: true,
-      summary: summary
-    });
-    
-  } catch (error) {
-    console.error('Error al obtener resumen:', error);
-    res.status(500).json({ 
-      error: 'Error al obtener resumen',
-      message: error.message 
-    });
-  }
-});
 
-// Ruta para obtener gastos por categoría (protegida)
-app.get('/api/transactions/expenses-by-category', authenticateToken, requireVerification, async (req, res) => {
-  try {
-    const period = req.query.period || 'month';
-    const expenses = await transactionService.getExpensesByCategory(req.user.id, period);
-    
-    res.json({
-      success: true,
-      expenses: expenses
-    });
-    
-  } catch (error) {
-    console.error('Error al obtener gastos por categoría:', error);
-    res.status(500).json({ 
-      error: 'Error al obtener gastos por categoría',
-      message: error.message 
-    });
-  }
-});
 
 // Ruta para obtener categorías
 app.get('/api/categories', async (req, res) => {

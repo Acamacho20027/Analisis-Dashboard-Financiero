@@ -602,56 +602,79 @@ body.categorias-financieras-page {
 }
 
 /* Estilos para Metas de Ahorro */
-.goals-grid {
+/* Estilos para el Balance Anual */
+.annual-balance-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.balance-summary {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1.5rem;
+    margin-bottom: 1rem;
 }
 
-.goal-card {
-    padding: 1.5rem;
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+.balance-metric {
+    background: white;
     border-radius: 12px;
-    border: 1px solid #bae6fd;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    text-align: center;
+    transition: all 0.3s ease;
 }
 
-.goal-info h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #0c4a6e;
-    margin: 0 0 0.5rem 0;
+.balance-metric:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
-.goal-info p {
-    color: #0369a1;
-    margin: 0 0 1rem 0;
+.balance-metric h3 {
     font-size: 0.9rem;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.goal-progress {
-    margin-top: 1rem;
-}
-
-.progress-bar {
-    width: 100%;
-    height: 8px;
-    background-color: #e2e8f0;
-    border-radius: 4px;
-    overflow: hidden;
+.balance-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e293b;
     margin-bottom: 0.5rem;
 }
 
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);
-    border-radius: 4px;
-    transition: width 0.3s ease;
+.balance-change {
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    display: inline-block;
 }
 
-.progress-text {
-    font-size: 0.8rem;
-    color: #64748b;
-    font-weight: 500;
+.balance-change.positive {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.balance-change.negative {
+    background-color: #fef2f2;
+    color: #dc2626;
+}
+
+.balance-chart-container {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    height: 400px;
+    position: relative;
+}
+
+.balance-chart-container canvas {
+    max-height: 100%;
 }
 
 /* Estilos para Actividad Reciente */
