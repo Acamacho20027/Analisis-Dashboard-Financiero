@@ -58,6 +58,9 @@ Una aplicación web moderna y completa para el control de finanzas personales, c
 - **Análisis de ingresos y gastos** detectados automáticamente
 - **Visualización de resultados** integrada en el frontend
 - **Almacenamiento en base de datos** SQL Server para historial
+- **Modales elegantes** para confirmaciones y notificaciones
+- **Sistema de confirmación** para eliminación de archivos con advertencias
+- **Notificaciones visuales** con animaciones y colores consistentes
 
 ### 📊 Reportes y Exportación
 - **Exportación a PDF** usando jsPDF
@@ -456,7 +459,7 @@ Proyecto_Analisis_Financiero/
 
 ## 🔄 Historial de Versiones
 
-### v3.5.0 (Actual) - **Módulo de Análisis de Archivos**
+### v3.5.0 (Actual) - **Módulo de Análisis de Archivos con Modales Elegantes**
 - ✅ **Módulo "Análisis de Archivos"** completamente funcional
 - ✅ **Procesamiento de PDF y Excel** con análisis financiero automático
 - ✅ **Backend Python integrado** con Flask, pandas, numpy, matplotlib
@@ -471,6 +474,10 @@ Proyecto_Analisis_Financiero/
 - ✅ **Autenticación JWT** integrada para seguridad
 - ✅ **Manejo robusto de errores** y timeouts
 - ✅ **Interfaz simplificada** con información esencial
+- ✅ **Modales elegantes** para notificaciones y confirmaciones
+- ✅ **Sistema de confirmación** para eliminación con advertencias visuales
+- ✅ **Notificaciones visuales** con animaciones y colores consistentes
+- ✅ **UX mejorada** con indicadores de carga y restauración de botones
 
 ### v3.4.0 - **Dashboard Mejorado con Balance Anual**
 - ✅ **Sección "Balance Anual"** reemplaza "Metas de Ahorro" con gráfico de barras mensuales

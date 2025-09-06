@@ -176,7 +176,8 @@ async function procesarArchivo() {
             document.getElementById('fileUploadArea').style.display = 'block';
             document.getElementById('fileSelected').style.display = 'none';
             
-            alert('Archivo procesado exitosamente');
+            // Mostrar modal de éxito
+            mostrarModalExito();
         } else {
             throw new Error(result.error || 'Error al procesar el archivo');
         }
@@ -383,9 +384,15 @@ function obtenerTextoEstado(estado) {
 // La función verResultados ha sido removida
 
 async function eliminarArchivo(archivoId) {
-    if (!confirm('¿Estás seguro de que quieres eliminar este archivo? Esta acción no se puede deshacer.')) {
-        return;
-    }
+    // Mostrar modal de confirmación
+    mostrarModalConfirmacion(archivoId);
+}
+
+// Variable para almacenar el ID del archivo a eliminar
+let archivoIdAEliminar = null;
+
+async function confirmarEliminacion() {
+    if (!archivoIdAEliminar) return;
     
     try {
         const token = localStorage.getItem('authToken');
@@ -393,22 +400,19 @@ async function eliminarArchivo(archivoId) {
             throw new Error('Token de autenticación no encontrado');
         }
         
-        // Mostrar indicador de carga
-        const fileCard = document.querySelector(`[data-file-id="${archivoId}"]`);
-        if (fileCard) {
-            const deleteBtn = fileCard.querySelector('.btn-danger');
-            const originalText = deleteBtn.innerHTML;
-            deleteBtn.innerHTML = `
-                <svg class="animate-spin" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Eliminando...
-            `;
-            deleteBtn.disabled = true;
-        }
+        // Mostrar indicador de carga en el botón
+        const confirmBtn = document.getElementById('deleteConfirmBtn');
+        const originalText = confirmBtn.innerHTML;
+        confirmBtn.innerHTML = `
+            <svg class="animate-spin" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Eliminando...
+        `;
+        confirmBtn.disabled = true;
         
-        const response = await fetch(`/api/analisis-archivos/eliminar/${archivoId}`, {
+        const response = await fetch(`/api/analisis-archivos/eliminar/${archivoIdAEliminar}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -418,8 +422,21 @@ async function eliminarArchivo(archivoId) {
         const result = await response.json();
         
         if (result.success) {
-            // Mostrar mensaje de éxito
-            alert('Archivo eliminado exitosamente');
+            // Restaurar botón antes de cerrar modal
+            const confirmBtn = document.getElementById('deleteConfirmBtn');
+            confirmBtn.innerHTML = `
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+                Eliminar
+            `;
+            confirmBtn.disabled = false;
+            
+            // Cerrar modal de confirmación
+            cerrarModalConfirmacion();
+            
+            // Mostrar modal de éxito
+            mostrarModalExitoEliminacion();
             
             // Recargar la lista de archivos
             cargarArchivosProcesados();
@@ -432,17 +449,14 @@ async function eliminarArchivo(archivoId) {
         alert('Error al eliminar el archivo: ' + error.message);
         
         // Restaurar botón en caso de error
-        const fileCard = document.querySelector(`[data-file-id="${archivoId}"]`);
-        if (fileCard) {
-            const deleteBtn = fileCard.querySelector('.btn-danger');
-            deleteBtn.innerHTML = `
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                </svg>
-                Eliminar
-            `;
-            deleteBtn.disabled = false;
-        }
+        const confirmBtn = document.getElementById('deleteConfirmBtn');
+        confirmBtn.innerHTML = `
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            </svg>
+            Eliminar
+        `;
+        confirmBtn.disabled = false;
     }
 }
 
@@ -491,4 +505,169 @@ function formatearMonto(monto) {
     if (monto < 1000) return monto.toFixed(2);
     if (monto < 1000000) return (monto / 1000).toFixed(1) + 'K';
     return (monto / 1000000).toFixed(1) + 'M';
+}
+
+// Funciones del Modal de Éxito
+function mostrarModalExito() {
+    const modal = document.getElementById('successModal');
+    if (modal) {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden'; // Prevenir scroll del body
+        
+        // Agregar event listener para cerrar modal
+        const closeBtn = document.getElementById('modalCloseBtn');
+        if (closeBtn) {
+            closeBtn.onclick = cerrarModal;
+        }
+        
+        // Cerrar modal al hacer clic fuera del contenido
+        modal.onclick = function(event) {
+            if (event.target === modal) {
+                cerrarModal();
+            }
+        };
+        
+        // Cerrar modal con tecla Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                cerrarModal();
+            }
+        });
+    }
+}
+
+function cerrarModal() {
+    const modal = document.getElementById('successModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restaurar scroll del body
+        
+        // Remover event listeners
+        const closeBtn = document.getElementById('modalCloseBtn');
+        if (closeBtn) {
+            closeBtn.onclick = null;
+        }
+        
+        modal.onclick = null;
+        document.removeEventListener('keydown', cerrarModal);
+    }
+}
+
+// Funciones del Modal de Confirmación de Eliminación
+function mostrarModalConfirmacion(archivoId) {
+    archivoIdAEliminar = archivoId;
+    const modal = document.getElementById('deleteConfirmModal');
+    if (modal) {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        
+        // Agregar event listeners
+        const cancelBtn = document.getElementById('deleteCancelBtn');
+        const confirmBtn = document.getElementById('deleteConfirmBtn');
+        
+        if (cancelBtn) {
+            cancelBtn.onclick = cerrarModalConfirmacion;
+        }
+        
+        if (confirmBtn) {
+            confirmBtn.onclick = confirmarEliminacion;
+        }
+        
+        // Cerrar modal al hacer clic fuera del contenido
+        modal.onclick = function(event) {
+            if (event.target === modal) {
+                cerrarModalConfirmacion();
+            }
+        };
+        
+        // Cerrar modal con tecla Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                cerrarModalConfirmacion();
+            }
+        });
+    }
+}
+
+function cerrarModalConfirmacion() {
+    const modal = document.getElementById('deleteConfirmModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        
+        // Restaurar botón de confirmación por si acaso
+        const confirmBtn = document.getElementById('deleteConfirmBtn');
+        if (confirmBtn) {
+            confirmBtn.innerHTML = `
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+                Eliminar
+            `;
+            confirmBtn.disabled = false;
+        }
+        
+        // Limpiar variable
+        archivoIdAEliminar = null;
+        
+        // Remover event listeners
+        const cancelBtn = document.getElementById('deleteCancelBtn');
+        
+        if (cancelBtn) {
+            cancelBtn.onclick = null;
+        }
+        
+        if (confirmBtn) {
+            confirmBtn.onclick = null;
+        }
+        
+        modal.onclick = null;
+        document.removeEventListener('keydown', cerrarModalConfirmacion);
+    }
+}
+
+// Funciones del Modal de Éxito de Eliminación
+function mostrarModalExitoEliminacion() {
+    const modal = document.getElementById('deleteSuccessModal');
+    if (modal) {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        
+        // Agregar event listener para cerrar modal
+        const closeBtn = document.getElementById('deleteSuccessCloseBtn');
+        if (closeBtn) {
+            closeBtn.onclick = cerrarModalExitoEliminacion;
+        }
+        
+        // Cerrar modal al hacer clic fuera del contenido
+        modal.onclick = function(event) {
+            if (event.target === modal) {
+                cerrarModalExitoEliminacion();
+            }
+        };
+        
+        // Cerrar modal con tecla Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                cerrarModalExitoEliminacion();
+            }
+        });
+    }
+}
+
+function cerrarModalExitoEliminacion() {
+    const modal = document.getElementById('deleteSuccessModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        
+        // Remover event listeners
+        const closeBtn = document.getElementById('deleteSuccessCloseBtn');
+        if (closeBtn) {
+            closeBtn.onclick = null;
+        }
+        
+        modal.onclick = null;
+        document.removeEventListener('keydown', cerrarModalExitoEliminacion);
+    }
 }

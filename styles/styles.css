@@ -2034,3 +2034,240 @@ body.categorias-financieras-page {
         justify-content: center;
     }
 }
+
+/* Modal de Éxito */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    animation: slideIn 0.3s ease-out;
+    overflow: hidden;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    padding: 2rem;
+    text-align: center;
+    color: white;
+}
+
+.modal-header.delete {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+}
+
+.modal-header.success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.modal-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: bounceIn 0.6s ease-out;
+}
+
+.modal-icon svg {
+    width: 32px;
+    height: 32px;
+    stroke-width: 3;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.modal-message {
+    font-size: 1.1rem;
+    color: #374151;
+    text-align: center;
+    margin: 0 0 1.5rem;
+    line-height: 1.6;
+}
+
+.modal-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.modal-details .detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background-color: #f8fafc;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+}
+
+.modal-details .detail-item.warning {
+    background-color: #fef2f2;
+    border-left: 4px solid #dc2626;
+}
+
+.modal-details .detail-icon {
+    width: 20px;
+    height: 20px;
+    color: #3b82f6;
+    flex-shrink: 0;
+}
+
+.modal-details .detail-item.warning .detail-icon {
+    color: #dc2626;
+}
+
+.modal-details span {
+    color: #4b5563;
+    font-weight: 500;
+}
+
+.modal-footer {
+    padding: 1.5rem 2rem 2rem;
+    text-align: center;
+}
+
+.modal-footer .btn {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    background-color: #64748b;
+    color: white;
+    border: none;
+}
+
+.modal-footer .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px -5px rgba(100, 116, 139, 0.4);
+    background-color: #475569;
+}
+
+.modal-footer .btn.btn-secondary {
+    background-color: #64748b;
+    color: white;
+    border: none;
+    margin-right: 0.5rem;
+}
+
+.modal-footer .btn.btn-secondary:hover {
+    background-color: #475569;
+    box-shadow: 0 10px 25px -5px rgba(100, 116, 139, 0.4);
+}
+
+.modal-footer .btn.btn-danger {
+    background-color: #dc2626;
+    color: white;
+    border: none;
+}
+
+.modal-footer .btn.btn-danger:hover {
+    background-color: #b91c1c;
+    box-shadow: 0 10px 25px -5px rgba(220, 38, 38, 0.4);
+}
+
+/* Animaciones del Modal */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Responsive para Modal */
+@media (max-width: 768px) {
+    .modal-content {
+        margin: 10% auto;
+        width: 95%;
+    }
+    
+    .modal-header {
+        padding: 1.5rem;
+    }
+    
+    .modal-body {
+        padding: 1.5rem;
+    }
+    
+    .modal-footer {
+        padding: 1rem 1.5rem 1.5rem;
+    }
+    
+    .modal-icon {
+        width: 56px;
+        height: 56px;
+    }
+    
+    .modal-icon svg {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .modal-title {
+        font-size: 1.25rem;
+    }
+    
+    .modal-message {
+        font-size: 1rem;
+    }
+}
