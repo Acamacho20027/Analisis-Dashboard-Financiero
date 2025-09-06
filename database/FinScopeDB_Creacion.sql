@@ -59,6 +59,22 @@ CREATE TABLE Transactions (
     FOREIGN KEY (CategoryId) REFERENCES Categories(Id)
 );
 
+-- Crear tabla de archivos procesados
+CREATE TABLE ProcessedFiles (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    UserId INT NOT NULL,
+    FileName NVARCHAR(255) NOT NULL,
+    FileType NVARCHAR(10) NOT NULL CHECK (FileType IN ('pdf', 'xlsx', 'xls')),
+    FileSize BIGINT NOT NULL,
+    OriginalData NVARCHAR(MAX) NULL, -- Datos extraídos del archivo
+    AnalysisResults NVARCHAR(MAX) NULL, -- Resultados del análisis en JSON
+    ChartsData NVARCHAR(MAX) NULL, -- Datos de gráficos en base64
+    ProcessedAt DATETIME2 DEFAULT GETDATE(),
+    Status NVARCHAR(20) DEFAULT 'processing' CHECK (Status IN ('processing', 'completed', 'error')),
+    ErrorMessage NVARCHAR(500) NULL,
+    FOREIGN KEY (UserId) REFERENCES Users(Id)
+);
+
 -- Crear tabla de sesiones de usuario
 CREATE TABLE UserSessions (
     Id INT IDENTITY(1,1) PRIMARY KEY,
@@ -77,6 +93,9 @@ CREATE INDEX IX_Categories_UserId ON Categories(UserId);
 CREATE INDEX IX_Transactions_UserId ON Transactions(UserId);
 CREATE INDEX IX_Transactions_TransactionDate ON Transactions(TransactionDate);
 CREATE INDEX IX_Transactions_CategoryId ON Transactions(CategoryId);
+CREATE INDEX IX_ProcessedFiles_UserId ON ProcessedFiles(UserId);
+CREATE INDEX IX_ProcessedFiles_ProcessedAt ON ProcessedFiles(ProcessedAt);
+CREATE INDEX IX_ProcessedFiles_Status ON ProcessedFiles(Status);
 CREATE INDEX IX_UserSessions_UserId ON UserSessions(UserId);
 CREATE INDEX IX_UserSessions_Token ON UserSessions(Token);
 

@@ -2,7 +2,7 @@ import pyodbc
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv('config.env')
 
 class DatabaseConnection:
     def __init__(self):
@@ -122,3 +122,15 @@ class DatabaseConnection:
         if self.connection:
             self.connection.close()
             self.connection = None
+    
+    @property
+    def conn(self):
+        """Propiedad para compatibilidad con el código existente"""
+        return self.connection
+    
+    @property
+    def cursor(self):
+        """Propiedad para obtener cursor"""
+        if not self.connection:
+            self.connect()
+        return self.connection.cursor()

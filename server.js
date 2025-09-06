@@ -4,6 +4,9 @@ const nodemailer = require('nodemailer');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
+const multer = require('multer');
+const fetch = require('node-fetch');
+const FormData = require('form-data');
 
 // Importar servicios y configuración
 const { connectDB, closeDB } = require('./config/database');
@@ -14,6 +17,22 @@ const { authenticateToken, requireVerification } = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Configurar multer para manejo de archivos
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 10 * 1024 * 1024 // 10MB
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'];
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Tipo de archivo no permitido'), false);
+    }
+  }
+});
 
 // Middleware
 app.use(cors());
@@ -70,9 +89,9 @@ app.get('/categorias-financieras', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'categorias-financieras.html'));
 });
 
-// Ruta para transacciones
-app.get('/transacciones', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'transacciones.html'));
+// Ruta para análisis de archivos
+app.get('/analisis-archivos', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'analisis-archivos.html'));
 });
 
 // Ruta para reportes
@@ -655,6 +674,169 @@ app.get('/api/categorias/resumen', authenticateToken, async (req, res) => {
     console.error('Error en resumen de categorías:', error);
     res.status(500).json({ 
       error: 'Error al obtener resumen de categorías',
+      message: error.message 
+    });
+  }
+});
+
+// ===== ANÁLISIS DE ARCHIVOS - PROXY A PYTHON =====
+
+// Proxy para procesar archivos
+app.post('/api/analisis-archivos/procesar', authenticateToken, upload.single('file'), async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    // Redirigir a la API de Python
+    const pythonApiUrl = 'http://localhost:5000/api/analisis-archivos/procesar';
+    
+    // Crear una petición al backend de Python
+    
+    // Preparar los datos para enviar
+    const formData = new FormData();
+    
+    // Obtener el archivo del request
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        error: 'No se proporcionó archivo'
+      });
+    }
+    
+    const file = req.file;
+    
+    // Agregar archivo al FormData
+    formData.append('file', file.buffer, {
+      filename: file.originalname,
+      contentType: file.mimetype
+    });
+    formData.append('userId', userId);
+    
+    // Enviar al servidor Python
+        const response = await fetch(pythonApiUrl, {
+            method: 'POST',
+            body: formData,
+            headers: formData.getHeaders(),
+            timeout: 30000 // 30 segundos timeout
+        });
+    
+    const result = await response.json();
+    res.json(result);
+    
+  } catch (error) {
+    console.error('Error en procesamiento de archivos:', error);
+    res.status(500).json({ 
+      success: false,
+      error: 'Error al procesar archivo',
+      message: error.message 
+    });
+  }
+});
+
+// Proxy para obtener historial de archivos
+app.get('/api/analisis-archivos/historial', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    // Hacer petición al backend de Python
+    const pythonResponse = await fetch(`http://localhost:5000/api/analisis-archivos/historial?userId=${userId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!pythonResponse.ok) {
+      throw new Error(`Error del servidor Python: ${pythonResponse.status}`);
+    }
+    
+    const result = await pythonResponse.json();
+    
+    if (result.success) {
+      // Enriquecer los datos con información adicional
+      const archivos = result.archivos.map(archivo => ({
+        id: archivo.id,
+        fileName: archivo.fileName,
+        fileType: archivo.fileType,
+        fileSize: archivo.fileSize,
+        status: archivo.status,
+        processedAt: archivo.processedAt,
+        totalRecords: 0, // Se puede calcular desde los datos originales si es necesario
+        totalIncome: 0,  // Se puede calcular desde los datos originales si es necesario
+        totalExpenses: 0, // Se puede calcular desde los datos originales si es necesario
+        errorMessage: archivo.errorMessage
+      }));
+      
+      res.json({
+        success: true,
+        archivos: archivos
+      });
+    } else {
+      throw new Error(result.error || 'Error al obtener historial');
+    }
+    
+  } catch (error) {
+    console.error('Error al obtener historial de archivos:', error);
+    res.status(500).json({ 
+      error: 'Error al obtener historial de archivos',
+      message: error.message 
+    });
+  }
+});
+
+// Proxy para eliminar un archivo procesado
+app.delete('/api/analisis-archivos/eliminar/:fileId', authenticateToken, async (req, res) => {
+  try {
+    const fileId = req.params.fileId;
+    const userId = req.user.id;
+    
+    // Hacer petición al backend de Python
+    const pythonResponse = await fetch(`http://localhost:5000/api/analisis-archivos/eliminar/${fileId}?userId=${userId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!pythonResponse.ok) {
+      throw new Error(`Error del servidor Python: ${pythonResponse.status}`);
+    }
+    
+    const result = await pythonResponse.json();
+    
+    if (result.success) {
+      res.json({
+        success: true,
+        message: 'Archivo eliminado exitosamente'
+      });
+    } else {
+      throw new Error(result.error || 'Error al eliminar el archivo');
+    }
+    
+  } catch (error) {
+    console.error('Error al eliminar archivo:', error);
+    res.status(500).json({ 
+      error: 'Error al eliminar archivo',
+      message: error.message 
+    });
+  }
+});
+
+// Proxy para obtener resultados de un archivo específico
+app.get('/api/analisis-archivos/resultados/:fileId', authenticateToken, async (req, res) => {
+  try {
+    const fileId = req.params.fileId;
+    const userId = req.user.id;
+    
+    // Por ahora retornamos un error
+    res.status(501).json({
+      error: 'Funcionalidad de análisis de archivos en desarrollo',
+      message: 'Esta funcionalidad requiere la integración completa con el backend de Python'
+    });
+    
+  } catch (error) {
+    console.error('Error al obtener resultados de archivo:', error);
+    res.status(500).json({ 
+      error: 'Error al obtener resultados de archivo',
       message: error.message 
     });
   }

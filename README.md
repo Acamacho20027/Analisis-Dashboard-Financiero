@@ -38,7 +38,7 @@ Una aplicación web moderna y completa para el control de finanzas personales, c
 - **Base de datos SQL Server** para almacenamiento persistente y seguro
 - **API REST completa** para operaciones CRUD
 
-### 📊 Categorías Financieras (NUEVO)
+### 📊 Categorías Financieras
 - **Análisis de Gastos por Categoría** con gráficos de dona interactivos
 - **Evolución del Balance** con gráficos de barras acumuladas y gradientes
 - **Distribución Ingresos vs Gastos** con gráficos de barras comparativas
@@ -47,6 +47,17 @@ Una aplicación web moderna y completa para el control de finanzas personales, c
 - **Tooltips informativos** con porcentajes y valores formateados
 - **Diseño responsivo** con colores profesionales y efectos hover
 - **Fallback inteligente** a datos de ejemplo si no hay autenticación
+
+### 📁 Análisis de Archivos (NUEVO)
+- **Procesamiento de archivos PDF y Excel** con análisis financiero automático
+- **Backend Python integrado** con pandas, numpy, matplotlib y scikit-learn
+- **Extracción inteligente de datos** financieros de documentos
+- **Generación de gráficos** personalizados con matplotlib
+- **Interfaz drag & drop** para carga de archivos
+- **Historial de archivos procesados** con funcionalidad de eliminación
+- **Análisis de ingresos y gastos** detectados automáticamente
+- **Visualización de resultados** integrada en el frontend
+- **Almacenamiento en base de datos** SQL Server para historial
 
 ### 📊 Reportes y Exportación
 - **Exportación a PDF** usando jsPDF
@@ -80,13 +91,16 @@ Una aplicación web moderna y completa para el control de finanzas personales, c
 
 ## 🛠️ Tecnologías Utilizadas
 
-### **Backend (NUEVO)**
-- **Node.js** con Express.js para el servidor
+### **Backend**
+- **Node.js** con Express.js para el servidor principal
+- **Python Flask** para análisis avanzado de archivos
 - **SQL Server** como base de datos principal
 - **JWT** para autenticación segura
 - **bcryptjs** para encriptación de contraseñas
 - **Nodemailer** para envío de emails de verificación
 - **API REST** completa para todas las operaciones
+- **pandas, numpy, matplotlib** para análisis de datos
+- **scikit-learn** para análisis avanzado
 
 ### **Frontend**
 - **HTML5, CSS3, JavaScript ES6+** para la interfaz
@@ -316,6 +330,11 @@ python start_python_api.py
 ### **Endpoints de Categorías**
 - **GET** `/api/categories` - Obtener categorías disponibles
 
+### **Endpoints de Análisis de Archivos**
+- **POST** `/api/analisis-archivos/procesar` - Procesar archivo PDF/Excel
+- **GET** `/api/analisis-archivos/historial` - Obtener historial de archivos procesados
+- **DELETE** `/api/analisis-archivos/eliminar/:fileId` - Eliminar archivo procesado
+
 ### **Seguridad y Autenticación**
 - **Middleware JWT** para rutas protegidas
 - **Encriptación bcrypt** para contraseñas
@@ -360,13 +379,13 @@ python start_python_api.py
 - [x] **Implementar base de datos real** (SQL Server integrado)
 - [x] **Agregar autenticación robusta** con JWT y verificación 2FA
 - [x] **Sistema de usuarios real** con registro y login
+- [x] **Implementar análisis de archivos** PDF y Excel con Python
 - [ ] Implementar sincronización en la nube
 - [ ] Agregar más tipos de gráficas y visualizaciones
 - [ ] Implementar sistema de metas personalizables por usuario
 - [ ] Agregar notificaciones push y alertas
 - [ ] Implementar modo oscuro/claro
 - [ ] Agregar sistema de respaldo y restauración
-- [ ] Implementar importación de datos desde archivos externos
 - [ ] Agregar roles y permisos de usuario
 - [ ] Implementar auditoría de cambios
 
@@ -404,7 +423,7 @@ Proyecto_Analisis_Financiero/
 │   ├── espera.html          # Página de espera
 │   ├── dashboard.html       # Dashboard principal
 │   ├── categorias-financieras.html  # Página de categorías financieras
-│   ├── transacciones.html   # Gestión de transacciones
+│   ├── analisis-archivos.html  # Análisis de archivos PDF/Excel
 │   └── reportes.html        # Generación de reportes
 ├── scripts/                 # Archivos JavaScript organizados
 │   ├── auth/                # Autenticación
@@ -414,8 +433,8 @@ Proyecto_Analisis_Financiero/
 │   │   └── dashboard.js
 │   ├── categorias-financieras/  # Categorías Financieras
 │   │   └── categorias-financieras.js
-│   ├── transacciones/       # Transacciones
-│   │   └── transacciones.js
+│   ├── analisis-archivos/   # Análisis de Archivos
+│   │   └── analisis-archivos.js
 │   ├── reportes/            # Reportes
 │   │   └── reportes.js
 │   └── shared/              # Archivos compartidos
@@ -428,12 +447,32 @@ Proyecto_Analisis_Financiero/
 ├── services/                # Servicios del backend
 ├── middleware/              # Middleware de autenticación
 ├── config/                  # Configuración de base de datos
-└── database/                # Scripts SQL
+├── database/                # Scripts SQL
+└── python-backend/          # Backend Python para análisis
+    ├── api/                 # API Flask
+    ├── analysis/            # Módulos de análisis
+    └── requirements.txt     # Dependencias Python
 ```
 
 ## 🔄 Historial de Versiones
 
-### v3.4.0 (Actual) - **Dashboard Mejorado con Balance Anual**
+### v3.5.0 (Actual) - **Módulo de Análisis de Archivos**
+- ✅ **Módulo "Análisis de Archivos"** completamente funcional
+- ✅ **Procesamiento de PDF y Excel** con análisis financiero automático
+- ✅ **Backend Python integrado** con Flask, pandas, numpy, matplotlib
+- ✅ **Extracción inteligente de datos** financieros de documentos
+- ✅ **Generación de gráficos** personalizados con matplotlib
+- ✅ **Interfaz drag & drop** para carga de archivos
+- ✅ **Historial de archivos procesados** con funcionalidad de eliminación
+- ✅ **Análisis de ingresos y gastos** detectados automáticamente
+- ✅ **Visualización de resultados** integrada en el frontend
+- ✅ **Almacenamiento en base de datos** SQL Server para historial
+- ✅ **API REST completa** para operaciones de archivos
+- ✅ **Autenticación JWT** integrada para seguridad
+- ✅ **Manejo robusto de errores** y timeouts
+- ✅ **Interfaz simplificada** con información esencial
+
+### v3.4.0 - **Dashboard Mejorado con Balance Anual**
 - ✅ **Sección "Balance Anual"** reemplaza "Metas de Ahorro" con gráfico de barras mensuales
 - ✅ **Métricas anuales** (Balance Total, Ingresos Anuales, Gastos Anuales) con indicadores de cambio
 - ✅ **Gráfico interactivo** con colores dinámicos (verde/rojo según balance mensual)
