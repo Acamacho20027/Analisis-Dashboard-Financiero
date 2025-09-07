@@ -61,6 +61,12 @@ Una aplicación web moderna y completa para el control de finanzas personales, c
 - **Modales elegantes** para confirmaciones y notificaciones
 - **Sistema de confirmación** para eliminación de archivos con advertencias
 - **Notificaciones visuales** con animaciones y colores consistentes
+- **🆕 Visualización de análisis** con modal interactivo para ver resultados
+- **🆕 Descarga de análisis** en formato JPG con gráficos combinados
+- **🆕 Botón "Ver Análisis"** para archivos procesados exitosamente
+- **🆕 Resumen detallado** con métricas de ingresos, gastos y balance
+- **🆕 Validación robusta** de datos de gráficos para descarga
+- **🆕 Estados de carga** y manejo de errores mejorado
 
 ### 📊 Reportes y Exportación
 - **Exportación a PDF** usando jsPDF
@@ -336,6 +342,7 @@ python start_python_api.py
 ### **Endpoints de Análisis de Archivos**
 - **POST** `/api/analisis-archivos/procesar` - Procesar archivo PDF/Excel
 - **GET** `/api/analisis-archivos/historial` - Obtener historial de archivos procesados
+- **GET** `/api/analisis-archivos/resultados/:fileId` - Obtener resultados de análisis específico
 - **DELETE** `/api/analisis-archivos/eliminar/:fileId` - Eliminar archivo procesado
 
 ### **Seguridad y Autenticación**
@@ -383,6 +390,7 @@ python start_python_api.py
 - [x] **Agregar autenticación robusta** con JWT y verificación 2FA
 - [x] **Sistema de usuarios real** con registro y login
 - [x] **Implementar análisis de archivos** PDF y Excel con Python
+- [x] **Visualización y descarga de análisis** con modal interactivo
 - [ ] Implementar sincronización en la nube
 - [ ] Agregar más tipos de gráficas y visualizaciones
 - [ ] Implementar sistema de metas personalizables por usuario
@@ -391,6 +399,8 @@ python start_python_api.py
 - [ ] Agregar sistema de respaldo y restauración
 - [ ] Agregar roles y permisos de usuario
 - [ ] Implementar auditoría de cambios
+- [ ] Agregar descarga en múltiples formatos (PNG, PDF)
+- [ ] Implementar plantillas personalizables de reportes
 
 ## 📄 Licencia
 
@@ -459,7 +469,22 @@ Proyecto_Analisis_Financiero/
 
 ## 🔄 Historial de Versiones
 
-### v3.5.0 (Actual) - **Módulo de Análisis de Archivos con Modales Elegantes**
+### v3.6.0 (Actual) - **Visualización y Descarga de Análisis de Archivos**
+- ✅ **Botón "Ver Análisis"** para archivos procesados exitosamente
+- ✅ **Modal de visualización** con resumen completo del análisis
+- ✅ **Descarga en formato JPG** con gráficos combinados
+- ✅ **Proxy mejorado** del servidor Node.js para conectar con Python
+- ✅ **Validación robusta** de datos de gráficos para descarga
+- ✅ **Estados de carga** y manejo de errores mejorado
+- ✅ **Modal consistente** con el diseño del sistema
+- ✅ **Descarga simple** para archivos con un solo gráfico
+- ✅ **Descarga combinada** para múltiples gráficos en una imagen
+- ✅ **Nombres descriptivos** de archivos basados en el original
+- ✅ **Debug logging** para troubleshooting
+- ✅ **Botón centrado** de descarga JPG
+- ✅ **Manejo de errores** informativo y recuperación automática
+
+### v3.5.0 - **Módulo de Análisis de Archivos con Modales Elegantes**
 - ✅ **Módulo "Análisis de Archivos"** completamente funcional
 - ✅ **Procesamiento de PDF y Excel** con análisis financiero automático
 - ✅ **Backend Python integrado** con Flask, pandas, numpy, matplotlib

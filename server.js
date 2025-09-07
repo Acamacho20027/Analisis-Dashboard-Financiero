@@ -827,11 +827,20 @@ app.get('/api/analisis-archivos/resultados/:fileId', authenticateToken, async (r
     const fileId = req.params.fileId;
     const userId = req.user.id;
     
-    // Por ahora retornamos un error
-    res.status(501).json({
-      error: 'Funcionalidad de análisis de archivos en desarrollo',
-      message: 'Esta funcionalidad requiere la integración completa con el backend de Python'
+    // Redirigir a la API de Python
+    const pythonApiUrl = `http://localhost:5000/api/analisis-archivos/resultados/${fileId}?userId=${userId}`;
+    
+    // Hacer petición al backend de Python
+    const response = await fetch(pythonApiUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      timeout: 10000 // 10 segundos timeout
     });
+    
+    const result = await response.json();
+    res.json(result);
     
   } catch (error) {
     console.error('Error al obtener resultados de archivo:', error);
