@@ -43,119 +43,79 @@
                 <p class="page-subtitle">Crea y exporta reportes financieros personalizados</p>
             </header>
 
-            <!-- Herramientas de Exportación -->
+            <!-- Reportes de Transacciones -->
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">Exportar Datos</h2>
-                </div>
-                <div class="export-tools">
-                    <button id="exportPDF" class="btn btn-primary">
-                        <i>📄</i> Exportar a PDF
-                    </button>
-                    <button id="exportExcel" class="btn btn-success">
-                        <i>📊</i> Exportar a Excel
-                    </button>
-                    <button id="exportCSV" class="btn btn-secondary">
-                        <i>📋</i> Exportar a CSV
-                    </button>
-                </div>
-            </div>
-
-            <!-- Filtros de Reporte -->
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Configuración del Reporte</h2>
-                </div>
-                <div class="report-filters">
-                    <div class="filter-row">
-                        <div class="filter-group">
-                            <label for="dateFrom">Fecha Desde:</label>
-                            <input type="date" id="dateFrom">
+                    <div class="card-header-content">
+                        <div class="card-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                            </svg>
                         </div>
-                        
-                        <div class="filter-group">
-                            <label for="dateTo">Fecha Hasta:</label>
-                            <input type="date" id="dateTo">
-                        </div>
-                        
-                        <div class="filter-group">
-                            <label for="reportType">Tipo de Reporte:</label>
-                            <select id="reportType">
-                                <option value="completo">Reporte Completo</option>
-                                <option value="ingresos">Solo Ingresos</option>
-                                <option value="gastos">Solo Gastos</option>
-                                <option value="categoria">Por Categoría</option>
-                                <option value="mensual">Resumen Mensual</option>
-                            </select>
-                        </div>
-                        
-                        <div class="filter-group">
-                            <label for="categoryFilter">Categoría:</label>
-                            <select id="categoryFilter">
-                                <option value="">Todas las categorías</option>
-                                <option value="alimentacion">Alimentación</option>
-                                <option value="transporte">Transporte</option>
-                                <option value="entretenimiento">Entretenimiento</option>
-                                <option value="servicios">Servicios</option>
-                                <option value="salario">Salario</option>
-                                <option value="inversiones">Inversiones</option>
-                                <option value="otros">Otros</option>
-                            </select>
-                        </div>
+                        <h2 class="card-title">Reportes de Transacciones</h2>
                     </div>
-                    
-                    <div class="filter-actions">
-                        <button id="generateReport" class="btn btn-primary">
-                            <i>🔍</i> Generar Reporte
-                        </button>
-                        <button id="clearFilters" class="btn btn-secondary">
-                            <i>🗑️</i> Limpiar Filtros
-                        </button>
+                    <button id="downloadTransactionsPDF" class="btn btn-primary">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Descargar PDF
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div id="transactionsReportContent" class="report-content">
+                        <div class="loading-state">
+                            <div class="loading-spinner"></div>
+                            <p>Cargando transacciones...</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Vista Previa del Reporte -->
+            <!-- Reportes de Categorías Financieras -->
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">Vista Previa del Reporte</h2>
+                    <div class="card-header-content">
+                        <div class="card-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <h2 class="card-title">Reportes de Categorías Financieras</h2>
+                    </div>
+                    <button id="downloadCategoriesPDF" class="btn btn-primary">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Descargar PDF
+                    </button>
                 </div>
-                <div id="reportPreview" class="report-preview">
-                    <div class="preview-placeholder">
-                        <p>Selecciona los filtros y genera un reporte para ver la vista previa</p>
+                <div class="card-body">
+                    <div id="categoriesReportContent" class="report-content">
+                        <div class="loading-state">
+                            <div class="loading-spinner"></div>
+                            <p>Cargando categorías...</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Historial de Reportes -->
+            <!-- Historial de Reportes Generados -->
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">Historial de Reportes Generados</h2>
-                </div>
-                <div id="reportsHistory" class="reports-history">
-                    <div class="history-item">
-                        <div class="history-info">
-                            <h4>Reporte Mensual - Diciembre 2024</h4>
-                            <p>Generado el 15/12/2024 a las 14:30</p>
-                            <span class="report-type">Resumen Mensual</span>
+                    <div class="card-header-content">
+                        <div class="card-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
                         </div>
-                        <div class="history-actions">
-                            <button class="btn btn-secondary btn-sm">📄 PDF</button>
-                            <button class="btn btn-secondary btn-sm">📊 Excel</button>
-                            <button class="btn btn-secondary btn-sm">🗑️</button>
-                        </div>
+                        <h2 class="card-title">Historial de Reportes Generados</h2>
                     </div>
-                    
-                    <div class="history-item">
-                        <div class="history-info">
-                            <h4>Análisis de Gastos por Categoría</h4>
-                            <p>Generado el 10/12/2024 a las 09:15</p>
-                            <span class="report-type">Por Categoría</span>
-                        </div>
-                        <div class="history-actions">
-                            <button class="btn btn-secondary btn-sm">📄 PDF</button>
-                            <button class="btn btn-secondary btn-sm">📊 Excel</button>
-                            <button class="btn btn-secondary btn-sm">🗑️</button>
+                </div>
+                <div class="card-body">
+                    <div id="reportsHistory" class="reports-history">
+                        <div class="loading-state">
+                            <div class="loading-spinner"></div>
+                            <p>Cargando historial...</p>
                         </div>
                     </div>
                 </div>
@@ -163,6 +123,7 @@
         </main>
     </div>
 
+    <script src="/scripts/shared/config.js"></script>
     <script src="/scripts/reportes/reportes.js"></script>
 </body>
 </html>

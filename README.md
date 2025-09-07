@@ -69,12 +69,15 @@ Una aplicación web moderna y completa para el control de finanzas personales, c
 - **🆕 Estados de carga** y manejo de errores mejorado
 
 ### 📊 Reportes y Exportación
-- **Exportación a PDF** usando jsPDF
-- **Exportación a Excel** usando SheetJS
-- **Exportación a CSV** para análisis externos
-- **Filtros personalizables** por fecha, categoría y tipo
-- **Vista previa** de reportes antes de exportar
-- **Historial de reportes** generados
+- **Reportes de Transacciones** con vista previa completa y descarga en PDF
+- **Reportes de Categorías Financieras** con información detallada de categorías
+- **Vista previa en pantalla** con el mismo diseño que tendrá el PDF
+- **Historial de reportes generados** con opción de redescarga y eliminación
+- **Descarga en formato PDF** usando jsPDF con diseño profesional
+- **Datos obtenidos directamente** de las tablas de la base de datos
+- **Formato estructurado** con tablas, encabezados claros y diseño legible
+- **Estados de carga** y manejo de errores mejorado
+- **Notificaciones visuales** para confirmación de acciones
 
 ### 🎯 Metas de Ahorro Personalizadas
 - **Barras de progreso visuales** con porcentajes
@@ -391,6 +394,7 @@ python start_python_api.py
 - [x] **Sistema de usuarios real** con registro y login
 - [x] **Implementar análisis de archivos** PDF y Excel con Python
 - [x] **Visualización y descarga de análisis** con modal interactivo
+- [x] **Módulo de reportes completamente funcional** con vista previa y descarga PDF
 - [ ] Implementar sincronización en la nube
 - [ ] Agregar más tipos de gráficas y visualizaciones
 - [ ] Implementar sistema de metas personalizables por usuario
@@ -469,7 +473,21 @@ Proyecto_Analisis_Financiero/
 
 ## 🔄 Historial de Versiones
 
-### v3.6.0 (Actual) - **Visualización y Descarga de Análisis de Archivos**
+### v3.7.0 (Actual) - **Módulo de Reportes Completamente Funcional**
+- ✅ **Reportes de Transacciones** con vista previa completa y descarga en PDF
+- ✅ **Reportes de Categorías Financieras** con información detallada
+- ✅ **Vista previa en pantalla** con el mismo diseño que tendrá el PDF
+- ✅ **Historial de reportes generados** con opción de redescarga y eliminación
+- ✅ **Descarga en formato PDF** usando jsPDF con diseño profesional
+- ✅ **Datos obtenidos directamente** de las tablas de la base de datos
+- ✅ **Formato estructurado** con tablas, encabezados claros y diseño legible
+- ✅ **Estados de carga** y manejo de errores mejorado
+- ✅ **Notificaciones visuales** para confirmación de acciones
+- ✅ **Diseño responsive** que se adapta a todos los dispositivos
+- ✅ **Integración completa** con la base de datos SQL Server
+- ✅ **API REST** para obtener datos de transacciones y categorías
+
+### v3.6.0 - **Visualización y Descarga de Análisis de Archivos**
 - ✅ **Botón "Ver Análisis"** para archivos procesados exitosamente
 - ✅ **Modal de visualización** con resumen completo del análisis
 - ✅ **Descarga en formato JPG** con gráficos combinados
