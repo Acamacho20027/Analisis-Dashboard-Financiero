@@ -5,11 +5,8 @@ let reportesHistorial = [];
 let reporteAEliminar = null;
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Verificar autenticación
-    if (!localStorage.getItem('usuarioAutenticado')) {
-        window.location.href = '/views/index.html';
-        return;
-    }
+    // Verificar autenticación y rol
+    checkAuthAndRole();
 
     // Verificar que jsPDF esté cargado
     setTimeout(() => {
@@ -981,4 +978,49 @@ function cargarDatosPruebaCategorias() {
         }
     ];
     mostrarReporteCategorias();
+}
+
+// Verificar autenticación y rol
+async function checkAuthAndRole() {
+    try {
+        // Verificar autenticación básica primero
+        if (!isAuthenticated()) {
+            window.location.href = '/';
+            return;
+        }
+
+        // Esperar a que apiRequest esté disponible
+        if (typeof apiRequest !== 'function') {
+            console.error('apiRequest no está disponible');
+            window.location.href = '/';
+            return;
+        }
+
+        const response = await apiRequest('/api/profile');
+        if (response.success && response.user) {
+            const user = response.user;
+            
+            // Mostrar nombre del usuario
+            const userNameElement = document.getElementById('userName');
+            if (userNameElement) {
+                userNameElement.textContent = `${user.firstName} ${user.lastName}`;
+            }
+            
+            // Verificar si es administrador para mostrar menú de gestión de usuarios
+            const adminMenu = document.getElementById('adminMenu');
+            if (adminMenu) {
+                if (user.roleId === 2) { // 2 = Administrador
+                    adminMenu.style.display = 'block';
+                } else {
+                    adminMenu.style.display = 'none';
+                }
+            }
+        } else {
+            console.error('Error en respuesta de perfil:', response);
+            window.location.href = '/';
+        }
+    } catch (error) {
+        console.error('Error verificando autenticación:', error);
+        window.location.href = '/';
+    }
 }

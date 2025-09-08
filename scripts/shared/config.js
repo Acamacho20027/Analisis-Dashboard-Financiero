@@ -5,7 +5,7 @@ const CONFIG = {
     
     // Configuración de autenticación
     AUTH: {
-        TOKEN_KEY: 'authToken',
+        TOKEN_KEY: 'token',
         USER_KEY: 'usuarioAutenticado',
         USER_DATA_KEY: 'userData'
     },

@@ -95,7 +95,12 @@ class UserService {
     // Obtener usuario por ID
     async getUserById(userId) {
         try {
-            const query = 'SELECT * FROM Users WHERE Id = @param1';
+            const query = `
+                SELECT u.*, r.Name as RoleName, r.Description as RoleDescription
+                FROM Users u
+                LEFT JOIN Roles r ON u.RoleId = r.Id
+                WHERE u.Id = @param1
+            `;
             const result = await executeQuery(query, [userId]);
             return result.recordset[0] || null;
         } catch (error) {
@@ -144,6 +149,83 @@ class UserService {
             return jwt.verify(token, process.env.JWT_SECRET || 'default_secret');
         } catch (error) {
             throw new Error('Token inválido o expirado');
+        }
+    }
+
+    // Obtener todos los usuarios (solo administradores)
+    async getAllUsers() {
+        try {
+            const query = `
+                SELECT u.Id, u.Email, u.FirstName, u.LastName, u.RoleId, 
+                       r.Name as RoleName, u.CreatedAt, u.IsVerified, 
+                       u.LastLoginAt, u.IsActive
+                FROM Users u
+                LEFT JOIN Roles r ON u.RoleId = r.Id
+                ORDER BY u.CreatedAt DESC
+            `;
+            const result = await executeQuery(query, []);
+            return result.recordset;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    // Obtener usuario por ID para administradores
+    async getUserByIdForAdmin(userId) {
+        try {
+            const query = `
+                SELECT u.Id, u.Email, u.FirstName, u.LastName, u.RoleId, 
+                       r.Name as RoleName, r.Description as RoleDescription,
+                       u.CreatedAt, u.IsVerified, u.LastLoginAt, u.IsActive
+                FROM Users u
+                LEFT JOIN Roles r ON u.RoleId = r.Id
+                WHERE u.Id = @param1
+            `;
+            const result = await executeQuery(query, [userId]);
+            return result.recordset[0] || null;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    // Actualizar usuario (solo administradores)
+    async updateUser(userId, userData) {
+        try {
+            const { firstName, lastName, email, roleId, isActive } = userData;
+            
+            const query = `
+                UPDATE Users 
+                SET FirstName = @param1, LastName = @param2, Email = @param3, 
+                    RoleId = @param4, IsActive = @param5
+                WHERE Id = @param6
+            `;
+            
+            await executeQuery(query, [firstName, lastName, email, roleId, isActive, userId]);
+            return true;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    // Eliminar usuario (solo administradores)
+    async deleteUser(userId) {
+        try {
+            const query = 'UPDATE Users SET IsActive = 0 WHERE Id = @param1';
+            await executeQuery(query, [userId]);
+            return true;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    // Obtener todos los roles
+    async getAllRoles() {
+        try {
+            const query = 'SELECT * FROM Roles ORDER BY Id';
+            const result = await executeQuery(query, []);
+            return result.recordset;
+        } catch (error) {
+            throw error;
         }
     }
 }

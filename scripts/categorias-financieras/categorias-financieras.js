@@ -1,22 +1,90 @@
 // FinScope - Categorías Financieras
-document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar análisis de categorías
+document.addEventListener('DOMContentLoaded', async function() {
+    // Verificar autenticación y rol primero
+    await checkAuthAndRole();
+    
+    // Inicializar análisis de categorías después de la autenticación
     inicializarAnalisisCategorias();
     
     // Configurar logout
     document.getElementById('logoutBtn').addEventListener('click', function() {
-        localStorage.removeItem('usuarioAutenticado');
-        window.location.href = '/views/index.html';
+        localStorage.removeItem('token');
+        window.location.href = '/';
     });
 });
 
+// Verificar autenticación y rol del usuario
+async function checkAuthAndRole() {
+    try {
+        // Verificar autenticación básica primero
+        if (!isAuthenticated()) {
+            window.location.href = '/';
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        const response = await fetch('/api/profile', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            console.error('Error en respuesta del servidor:', response.status);
+            localStorage.removeItem('token');
+            localStorage.removeItem('usuarioAutenticado');
+            window.location.href = '/';
+            return;
+        }
+
+        const data = await response.json();
+        
+        if (data.success && data.user) {
+            const user = data.user;
+            
+            // Mostrar nombre del usuario
+            const userNameElement = document.getElementById('userName');
+            if (userNameElement) {
+                userNameElement.textContent = `${user.firstName} ${user.lastName}`;
+            }
+            
+            // Verificar si es administrador para mostrar menú de gestión de usuarios
+            const adminMenu = document.getElementById('adminMenu');
+            if (adminMenu) {
+                if (user.roleId === 2) { // 2 = Administrador
+                    adminMenu.style.display = 'block';
+                } else {
+                    adminMenu.style.display = 'none';
+                }
+            }
+        } else {
+            console.error('Error en datos de perfil:', data);
+            localStorage.removeItem('token');
+            localStorage.removeItem('usuarioAutenticado');
+            window.location.href = '/';
+        }
+    } catch (error) {
+        console.error('Error al verificar autenticación:', error);
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuarioAutenticado');
+        window.location.href = '/';
+    }
+}
+
 async function inicializarAnalisisCategorias() {
     try {
-        console.log('Iniciando análisis de categorías financieras...');
+        console.log('=== INICIANDO ANÁLISIS DE CATEGORÍAS FINANCIERAS ===');
         
         // Obtener datos de transacciones desde la base de datos
+        console.log('Obteniendo transacciones del usuario...');
         const transacciones = await obtenerTransacciones();
         console.log('Transacciones obtenidas:', transacciones.length);
+        
+        if (transacciones.length === 0) {
+            console.log('No hay transacciones para analizar');
+            mostrarMensajeSinDatos();
+            return;
+        }
         
         // Generar análisis de gastos por categoría
         console.log('Generando análisis de gastos...');
@@ -38,23 +106,46 @@ async function inicializarAnalisisCategorias() {
     }
 }
 
+// Mostrar mensaje cuando no hay datos
+function mostrarMensajeSinDatos() {
+    const container = document.querySelector('.main-content');
+    if (container) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #666;">
+                <h2>No hay datos para mostrar</h2>
+                <p>Para ver el análisis de categorías financieras, necesitas tener transacciones registradas.</p>
+                <p>Ve al <a href="/views/dashboard.html">Dashboard</a> para agregar tus primeras transacciones.</p>
+            </div>
+        `;
+    }
+}
+
 async function obtenerTransacciones() {
     try {
-        const token = localStorage.getItem('authToken');
+        const token = localStorage.getItem('token');
         
         console.log('Token de autenticación:', token ? 'Presente' : 'No encontrado');
         
-        // TEMPORAL: Usar endpoint de prueba para obtener datos reales
-        console.log('Intentando obtener transacciones del servidor...');
+        if (!token) {
+            console.log('No hay token, usando datos de ejemplo');
+            return generarDatosEjemplo();
+        }
         
-        // Usar endpoint de prueba que no requiere autenticación
-        let response = await fetch('/api/transactions/test', {
+        // Obtener transacciones de los últimos 6 meses
+        const endDate = new Date();
+        const startDate = new Date();
+        startDate.setMonth(startDate.getMonth() - 6);
+        
+        console.log('Obteniendo transacciones del usuario autenticado...');
+        
+        const response = await fetch(`/api/transactions?startDate=${startDate.toISOString().split('T')[0]}&endDate=${endDate.toISOString().split('T')[0]}`, {
             headers: {
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             }
         });
         
-        console.log('Respuesta del servidor (endpoint de prueba):', response.status, response.statusText);
+        console.log('Respuesta del servidor:', response.status, response.statusText);
         
         if (!response.ok) {
             console.log('Error al obtener transacciones del servidor, usando datos de ejemplo');
@@ -62,17 +153,21 @@ async function obtenerTransacciones() {
         }
         
         const data = await response.json();
-        console.log('Datos recibidos del servidor:', JSON.stringify(data, null, 2));
+        console.log('Datos recibidos del servidor:', data);
         
-        const transactions = data.transactions || data || [];
-        console.log('Transacciones procesadas:', transactions.length, 'registros');
-        
-        if (transactions.length > 0) {
-            console.log('Primera transacción:', JSON.stringify(transactions[0], null, 2));
-            console.log('Todas las transacciones:', JSON.stringify(transactions, null, 2));
+        if (data.success && data.transactions) {
+            const transactions = data.transactions;
+            console.log('Transacciones procesadas:', transactions.length, 'registros');
+            
+            if (transactions.length > 0) {
+                console.log('Primera transacción:', JSON.stringify(transactions[0], null, 2));
+            }
+            
+            return transactions;
+        } else {
+            console.log('No se obtuvieron transacciones del servidor, usando datos de ejemplo');
+            return generarDatosEjemplo();
         }
-        
-        return transactions;
     } catch (error) {
         console.error('Error al obtener transacciones:', error);
         console.log('Usando datos de ejemplo como fallback');

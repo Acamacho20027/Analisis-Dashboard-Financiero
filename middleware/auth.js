@@ -31,7 +31,9 @@ const authenticateToken = async (req, res, next) => {
             email: user.Email,
             firstName: user.FirstName,
             lastName: user.LastName,
-            isVerified: user.IsVerified
+            isVerified: user.IsVerified,
+            roleId: user.RoleId,
+            roleName: user.RoleName
         };
         
         next();
@@ -77,8 +79,20 @@ const requireOwnership = (req, res, next) => {
     next();
 };
 
+// Middleware para verificar si el usuario es administrador
+const requireAdmin = (req, res, next) => {
+    if (req.user.roleId !== 2) { // 2 = Administrador
+        return res.status(403).json({ 
+            error: 'Acceso denegado',
+            message: 'Solo los administradores pueden acceder a este recurso'
+        });
+    }
+    next();
+};
+
 module.exports = {
     authenticateToken,
     requireVerification,
-    requireOwnership
+    requireOwnership,
+    requireAdmin
 };

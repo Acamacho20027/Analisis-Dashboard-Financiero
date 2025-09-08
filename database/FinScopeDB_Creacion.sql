@@ -9,6 +9,14 @@ GO
 USE FinScopeDB;
 GO
 
+-- Crear tabla de roles
+CREATE TABLE Roles (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(50) NOT NULL UNIQUE,
+    Description NVARCHAR(255) NULL,
+    CreatedAt DATETIME2 DEFAULT GETDATE()
+);
+
 -- Crear tabla de usuarios
 CREATE TABLE Users (
     Id INT IDENTITY(1,1) PRIMARY KEY,
@@ -16,10 +24,12 @@ CREATE TABLE Users (
     PasswordHash NVARCHAR(255) NOT NULL,
     FirstName NVARCHAR(100) NOT NULL,
     LastName NVARCHAR(100) NOT NULL,
+    RoleId INT NOT NULL DEFAULT 1, -- 1 = Usuario, 2 = Administrador
     CreatedAt DATETIME2 DEFAULT GETDATE(),
     IsVerified BIT DEFAULT 0,
     LastLoginAt DATETIME2 NULL,
-    IsActive BIT DEFAULT 1
+    IsActive BIT DEFAULT 1,
+    FOREIGN KEY (RoleId) REFERENCES Roles(Id)
 );
 
 -- Crear tabla de códigos de verificación
@@ -98,6 +108,11 @@ CREATE INDEX IX_ProcessedFiles_ProcessedAt ON ProcessedFiles(ProcessedAt);
 CREATE INDEX IX_ProcessedFiles_Status ON ProcessedFiles(Status);
 CREATE INDEX IX_UserSessions_UserId ON UserSessions(UserId);
 CREATE INDEX IX_UserSessions_Token ON UserSessions(Token);
+
+-- Insertar roles por defecto
+INSERT INTO Roles (Name, Description) VALUES
+('Usuario', 'Usuario estándar con acceso a funcionalidades básicas del sistema'),
+('Administrador', 'Administrador con acceso completo al sistema incluyendo gestión de usuarios');
 
 -- Insertar categorías por defecto del sistema
 INSERT INTO Categories (UserId, Name, Type, Color, IsDefault) VALUES

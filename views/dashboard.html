@@ -24,6 +24,7 @@
                     <li><a href="/views/categorias-financieras.html">Categorías Financieras</a></li>
                     <li><a href="/views/analisis-archivos.html">Análisis de Archivos</a></li>
                     <li><a href="/views/reportes.html">Reportes</a></li>
+                    <li id="adminMenu" style="display: none;"><a href="/views/gestion-usuarios.html">Gestión de Usuarios</a></li>
                 </ul>
             </nav>
             
@@ -37,8 +38,15 @@
         <!-- Contenido Principal -->
         <main class="main-content">
             <header class="page-header">
-                <h1 class="page-title">Dashboard</h1>
-                <p class="page-subtitle">Bienvenido a tu panel de control financiero</p>
+                <div class="header-left">
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle">Bienvenido a tu panel de control financiero</p>
+                </div>
+                <div class="header-right">
+                    <div class="user-info">
+                        <span id="userName">Cargando...</span>
+                    </div>
+                </div>
             </header>
 
             <!-- Mensajes de estado -->

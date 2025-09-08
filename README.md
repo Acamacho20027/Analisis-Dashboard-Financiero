@@ -13,12 +13,13 @@ Una aplicación web moderna y completa para el control de finanzas personales, c
 
 ## ✨ Características Principales
 
-### 🔐 Sistema de Autenticación Robusto
+### 🔐 Sistema de Autenticación y Roles Robusto
 - **Login seguro** con usuario/contraseña
 - **Verificación de dos factores (2FA)** con código por email real
 - **Sesiones persistentes** con JWT tokens
 - **Flujo de autenticación completo** y seguro
 - **Registro de usuarios** con validación completa
+- **Sistema de roles** (Usuario/Administrador) con permisos diferenciados
 - **Base de datos SQL Server** para almacenamiento seguro
 
 ### 📊 Dashboard Financiero Inteligente
@@ -42,11 +43,11 @@ Una aplicación web moderna y completa para el control de finanzas personales, c
 - **Análisis de Gastos por Categoría** con gráficos de dona interactivos
 - **Evolución del Balance** con gráficos de barras acumuladas y gradientes
 - **Distribución Ingresos vs Gastos** con gráficos de barras comparativas
-- **Datos en tiempo real** desde la base de datos SQL Server
+- **Datos específicos por usuario** desde la base de datos SQL Server
 - **Procesamiento inteligente** de transacciones por mes y categoría
 - **Tooltips informativos** con porcentajes y valores formateados
 - **Diseño responsivo** con colores profesionales y efectos hover
-- **Fallback inteligente** a datos de ejemplo si no hay autenticación
+- **Autenticación robusta** con datos reales por rol de usuario
 
 ### 📁 Análisis de Archivos (NUEVO)
 - **Procesamiento de archivos PDF y Excel** con análisis financiero automático
@@ -74,7 +75,7 @@ Una aplicación web moderna y completa para el control de finanzas personales, c
 - **Vista previa en pantalla** con el mismo diseño que tendrá el PDF
 - **Historial de reportes generados** con opción de redescarga y eliminación
 - **Descarga en formato PDF** usando jsPDF con diseño profesional
-- **Datos obtenidos directamente** de las tablas de la base de datos
+- **Datos específicos por usuario** de las tablas de la base de datos
 - **Formato estructurado** con tablas, encabezados claros y diseño legible
 - **Estados de carga** y manejo de errores mejorado
 - **Notificaciones visuales** para confirmación de acciones
@@ -83,6 +84,16 @@ Una aplicación web moderna y completa para el control de finanzas personales, c
 - **🆕 Colores corporativos** y tipografía consistente en los PDFs
 - **🆕 Pie de página** con paginación y marca corporativa
 - **🆕 Tarjetas de resumen** con métricas destacadas y colores semánticos
+
+### 👥 Gestión de Usuarios (Solo Administradores)
+- **Registro de usuarios** con formulario completo y validaciones
+- **Edición de usuarios** con actualización de datos personales
+- **Historial de usuarios** registrados y modificados
+- **Eliminación lógica** de usuarios con confirmación
+- **Sistema de roles** con permisos diferenciados
+- **Interfaz administrativa** exclusiva para administradores
+- **Validación de permisos** en frontend y backend
+- **Base de datos SQL Server** para gestión de usuarios
 
 ### 🎯 Metas de Ahorro Personalizadas
 - **Barras de progreso visuales** con porcentajes
@@ -338,6 +349,13 @@ python start_python_api.py
 - **POST** `/api/verify` - Verificación de códigos 2FA
 - **GET** `/api/profile` - Perfil del usuario autenticado
 
+### **Endpoints de Gestión de Usuarios (Solo Administradores)**
+- **GET** `/api/users` - Obtener todos los usuarios
+- **GET** `/api/users/:id` - Obtener usuario específico
+- **PUT** `/api/users/:id` - Actualizar usuario
+- **DELETE** `/api/users/:id` - Eliminar usuario (lógico)
+- **GET** `/api/roles` - Obtener roles disponibles
+
 ### **Endpoints de Transacciones**
 - **POST** `/api/transactions` - Crear nueva transacción
 - **GET** `/api/transactions` - Obtener transacciones del usuario
@@ -406,7 +424,7 @@ python start_python_api.py
 - [ ] Agregar notificaciones push y alertas
 - [ ] Implementar modo oscuro/claro
 - [ ] Agregar sistema de respaldo y restauración
-- [ ] Agregar roles y permisos de usuario
+- [x] **Agregar roles y permisos de usuario** (Sistema completo implementado)
 - [ ] Implementar auditoría de cambios
 - [ ] Agregar descarga en múltiples formatos (PNG, PDF)
 - [ ] Implementar plantillas personalizables de reportes
@@ -478,7 +496,24 @@ Proyecto_Analisis_Financiero/
 
 ## 🔄 Historial de Versiones
 
-### v3.8.0 (Actual) - **Reportes con Diseño Profesional y Modal Elegante**
+### v3.9.0 (Actual) - **Sistema de Roles y Gestión de Usuarios**
+- ✅ **Sistema de roles** (Usuario/Administrador) completamente implementado
+- ✅ **Gestión de usuarios** exclusiva para administradores
+- ✅ **Datos específicos por usuario** en todos los módulos
+- ✅ **Autenticación robusta** con verificación de permisos
+- ✅ **Interfaz administrativa** con registro, edición y eliminación de usuarios
+- ✅ **Middleware de autorización** para rutas protegidas
+- ✅ **Base de datos actualizada** con tabla de roles y permisos
+- ✅ **UI consistente** en todos los módulos según rol
+- ✅ **API REST completa** para gestión de usuarios
+- ✅ **Validación de permisos** en frontend y backend
+- ✅ **Eliminación lógica** de usuarios con confirmación
+- ✅ **Historial de usuarios** registrados y modificados
+- ✅ **Sistema de autenticación** mejorado con roles
+- ✅ **Datos reales por usuario** en Dashboard y Categorías Financieras
+- ✅ **Navegación dinámica** según permisos del usuario
+
+### v3.8.0 - **Reportes con Diseño Profesional y Modal Elegante**
 - ✅ **Modal de confirmación elegante** para eliminación de reportes con animaciones suaves
 - ✅ **Backdrop blur** y efectos visuales profesionales en el modal
 - ✅ **PDFs con diseño corporativo** con encabezados azules y branding FinScope

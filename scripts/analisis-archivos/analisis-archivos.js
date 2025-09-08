@@ -1,5 +1,8 @@
 // FinScope - Análisis de Archivos
 document.addEventListener('DOMContentLoaded', function() {
+    // Verificar autenticación y rol
+    checkAuthAndRole();
+    
     // Cargar archivos procesados existentes
     cargarArchivosProcesados();
     
@@ -14,6 +17,64 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = '/views/index.html';
     });
 });
+
+// Verificar autenticación y rol del usuario
+async function checkAuthAndRole() {
+    try {
+        // Verificar autenticación básica primero
+        if (!isAuthenticated()) {
+            window.location.href = '/';
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        const response = await fetch('/api/profile', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            console.error('Error en respuesta del servidor:', response.status);
+            localStorage.removeItem('token');
+            localStorage.removeItem('usuarioAutenticado');
+            window.location.href = '/';
+            return;
+        }
+
+        const data = await response.json();
+        
+        if (data.success && data.user) {
+            const user = data.user;
+            
+            // Mostrar nombre del usuario
+            const userNameElement = document.getElementById('userName');
+            if (userNameElement) {
+                userNameElement.textContent = `${user.firstName} ${user.lastName}`;
+            }
+            
+            // Verificar si es administrador para mostrar menú de gestión de usuarios
+            const adminMenu = document.getElementById('adminMenu');
+            if (adminMenu) {
+                if (user.roleId === 2) { // 2 = Administrador
+                    adminMenu.style.display = 'block';
+                } else {
+                    adminMenu.style.display = 'none';
+                }
+            }
+        } else {
+            console.error('Error en datos de perfil:', data);
+            localStorage.removeItem('token');
+            localStorage.removeItem('usuarioAutenticado');
+            window.location.href = '/';
+        }
+    } catch (error) {
+        console.error('Error al verificar autenticación:', error);
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuarioAutenticado');
+        window.location.href = '/';
+    }
+}
 
 function configurarCargaArchivos() {
     const fileUploadArea = document.getElementById('fileUploadArea');
@@ -142,7 +203,7 @@ async function procesarArchivo() {
         formData.append('userId', usuario.id);
         
         // Obtener token JWT del localStorage
-        const token = localStorage.getItem('authToken');
+        const token = localStorage.getItem('token');
         if (!token) {
             throw new Error('Token de autenticación no encontrado');
         }
@@ -271,7 +332,7 @@ async function cargarArchivosProcesados() {
         }
         
         // Obtener token JWT del localStorage
-        const token = localStorage.getItem('authToken');
+        const token = localStorage.getItem('token');
         if (!token) {
             return;
         }
@@ -693,7 +754,7 @@ async function verAnalisis(archivoId) {
         mostrarLoadingAnalisis();
         
         // Obtener token JWT del localStorage
-        const token = localStorage.getItem('authToken');
+        const token = localStorage.getItem('token');
         if (!token) {
             throw new Error('Token de autenticación no encontrado');
         }

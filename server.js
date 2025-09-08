@@ -13,7 +13,7 @@ const { connectDB, closeDB } = require('./config/database');
 const userService = require('./services/userService');
 const verificationService = require('./services/verificationService');
 const transactionService = require('./services/transactionService');
-const { authenticateToken, requireVerification } = require('./middleware/auth');
+const { authenticateToken, requireVerification, requireAdmin } = require('./middleware/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -97,6 +97,11 @@ app.get('/analisis-archivos', (req, res) => {
 // Ruta para reportes
 app.get('/reportes', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'reportes.html'));
+});
+
+// Ruta para gestión de usuarios (solo administradores)
+app.get('/gestion-usuarios', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'gestion-usuarios.html'));
 });
 
 // ===== API RUTAS =====
@@ -452,7 +457,9 @@ app.get('/api/profile', authenticateToken, async (req, res) => {
         firstName: user.FirstName,
         lastName: user.LastName,
         isVerified: user.IsVerified,
-        lastLoginAt: user.LastLoginAt
+        lastLoginAt: user.LastLoginAt,
+        roleId: user.RoleId,
+        roleName: user.RoleName
       }
     });
     
@@ -460,6 +467,136 @@ app.get('/api/profile', authenticateToken, async (req, res) => {
     console.error('Error al obtener perfil:', error);
     res.status(500).json({ 
       error: 'Error al obtener perfil',
+      message: error.message 
+    });
+  }
+});
+
+// ===== GESTIÓN DE USUARIOS (SOLO ADMINISTRADORES) =====
+
+// Obtener todos los usuarios
+app.get('/api/users', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const users = await userService.getAllUsers();
+    
+    res.json({
+      success: true,
+      users: users
+    });
+    
+  } catch (error) {
+    console.error('Error al obtener usuarios:', error);
+    res.status(500).json({ 
+      error: 'Error al obtener usuarios',
+      message: error.message 
+    });
+  }
+});
+
+// Obtener usuario específico
+app.get('/api/users/:id', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const userId = parseInt(req.params.id);
+    const user = await userService.getUserByIdForAdmin(userId);
+    
+    if (!user) {
+      return res.status(404).json({ 
+        error: 'Usuario no encontrado' 
+      });
+    }
+    
+    res.json({
+      success: true,
+      user: user
+    });
+    
+  } catch (error) {
+    console.error('Error al obtener usuario:', error);
+    res.status(500).json({ 
+      error: 'Error al obtener usuario',
+      message: error.message 
+    });
+  }
+});
+
+// Actualizar usuario
+app.put('/api/users/:id', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const userId = parseInt(req.params.id);
+    const { firstName, lastName, email, roleId, isActive } = req.body;
+    
+    // Validación básica
+    if (!firstName || !lastName || !email || !roleId) {
+      return res.status(400).json({ 
+        error: 'Todos los campos son requeridos' 
+      });
+    }
+    
+    // Actualizar usuario
+    await userService.updateUser(userId, {
+      firstName,
+      lastName,
+      email,
+      roleId: parseInt(roleId),
+      isActive: isActive === true || isActive === 'true'
+    });
+    
+    res.json({
+      success: true,
+      message: 'Usuario actualizado exitosamente'
+    });
+    
+  } catch (error) {
+    console.error('Error al actualizar usuario:', error);
+    res.status(500).json({ 
+      error: 'Error al actualizar usuario',
+      message: error.message 
+    });
+  }
+});
+
+// Eliminar usuario (desactivar)
+app.delete('/api/users/:id', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const userId = parseInt(req.params.id);
+    
+    // No permitir que un administrador se elimine a sí mismo
+    if (userId === req.user.id) {
+      return res.status(400).json({ 
+        error: 'No puedes eliminar tu propia cuenta' 
+      });
+    }
+    
+    await userService.deleteUser(userId);
+    
+    res.json({
+      success: true,
+      message: 'Usuario eliminado exitosamente'
+    });
+    
+  } catch (error) {
+    console.error('Error al eliminar usuario:', error);
+    res.status(500).json({ 
+      error: 'Error al eliminar usuario',
+      message: error.message 
+    });
+  }
+});
+
+// Obtener todos los roles
+app.get('/api/roles', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const roles = await userService.getAllRoles();
+    
+    res.json({
+      success: true,
+      roles: roles
+    });
+    
+  } catch (error) {
+    console.error('Error al obtener roles:', error);
+    res.status(500).json({ 
+      error: 'Error al obtener roles',
       message: error.message 
     });
   }
