@@ -146,5 +146,82 @@ GO
 -- Crear job para limpiar datos expirados (opcional, para producción)
 -- Puedes configurar esto en SQL Server Agent para que se ejecute cada hora
 
-PRINT 'Base de datos FinScopeDB creada exitosamente con todas las tablas y datos iniciales.';
+-- ========================================
+-- SCRIPT DE ACTUALIZACIÓN PARA BASES DE DATOS EXISTENTES
+-- ========================================
+-- Este script verifica y actualiza bases de datos existentes con el sistema de roles
+
+-- Crear tabla de roles si no existe (para bases de datos existentes)
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Roles' AND xtype='U')
+BEGIN
+    CREATE TABLE Roles (
+        Id INT IDENTITY(1,1) PRIMARY KEY,
+        Name NVARCHAR(50) NOT NULL UNIQUE,
+        Description NVARCHAR(255) NULL,
+        CreatedAt DATETIME2 DEFAULT GETDATE()
+    );
+    PRINT 'Tabla Roles creada.';
+END
+ELSE
+BEGIN
+    PRINT 'Tabla Roles ya existe.';
+END
+GO
+
+-- Insertar roles por defecto si no existen
+IF NOT EXISTS (SELECT * FROM Roles WHERE Name = 'Usuario')
+BEGIN
+    INSERT INTO Roles (Name, Description) VALUES
+    ('Usuario', 'Usuario estándar con acceso a funcionalidades básicas del sistema');
+    PRINT 'Rol Usuario insertado.';
+END
+ELSE
+BEGIN
+    PRINT 'Rol Usuario ya existe.';
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM Roles WHERE Name = 'Administrador')
+BEGIN
+    INSERT INTO Roles (Name, Description) VALUES
+    ('Administrador', 'Administrador con acceso completo al sistema incluyendo gestión de usuarios');
+    PRINT 'Rol Administrador insertado.';
+END
+ELSE
+BEGIN
+    PRINT 'Rol Administrador ya existe.';
+END
+GO
+
+-- Agregar columna RoleId a la tabla Users si no existe
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Users') AND name = 'RoleId')
+BEGIN
+    ALTER TABLE Users ADD RoleId INT NOT NULL DEFAULT 1;
+    PRINT 'Columna RoleId agregada a tabla Users.';
+END
+ELSE
+BEGIN
+    PRINT 'Columna RoleId ya existe en tabla Users.';
+END
+GO
+
+-- Agregar foreign key constraint si no existe
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'FK_Users_Roles')
+BEGIN
+    ALTER TABLE Users ADD CONSTRAINT FK_Users_Roles FOREIGN KEY (RoleId) REFERENCES Roles(Id);
+    PRINT 'Foreign key FK_Users_Roles agregada.';
+END
+ELSE
+BEGIN
+    PRINT 'Foreign key FK_Users_Roles ya existe.';
+END
+GO
+
+-- Actualizar usuarios existentes para que tengan rol de Usuario (ID = 1)
+UPDATE Users SET RoleId = 1 WHERE RoleId IS NULL OR RoleId = 0;
+PRINT 'Usuarios existentes actualizados con rol de Usuario.';
+GO
+
+PRINT 'Base de datos FinScopeDB creada/actualizada exitosamente con todas las tablas y datos iniciales.';
+PRINT 'Sistema de roles implementado correctamente.';
 GO
