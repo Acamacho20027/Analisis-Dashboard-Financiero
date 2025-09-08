@@ -583,6 +583,50 @@ app.delete('/api/users/:id', authenticateToken, requireAdmin, async (req, res) =
   }
 });
 
+// Crear usuario (solo administradores)
+app.post('/api/users', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { firstName, lastName, email, roleId, isActive } = req.body;
+    
+    // Validación básica
+    if (!firstName || !lastName || !email || !roleId) {
+      return res.status(400).json({ 
+        error: 'Todos los campos son requeridos' 
+      });
+    }
+    
+    // Crear usuario
+    const result = await userService.createUser({
+      firstName,
+      lastName,
+      email,
+      roleId: parseInt(roleId),
+      isActive: isActive === true || isActive === 'true'
+    });
+    
+    res.json({
+      success: true,
+      message: 'Usuario creado exitosamente',
+      userId: result.userId,
+      tempPassword: result.tempPassword
+    });
+    
+  } catch (error) {
+    console.error('Error al crear usuario:', error);
+    
+    if (error.message === 'El usuario ya existe con este email') {
+      return res.status(400).json({ 
+        error: 'El usuario ya existe con este email' 
+      });
+    }
+    
+    res.status(500).json({ 
+      error: 'Error al crear usuario',
+      message: error.message 
+    });
+  }
+});
+
 // Obtener todos los roles
 app.get('/api/roles', authenticateToken, requireAdmin, async (req, res) => {
   try {

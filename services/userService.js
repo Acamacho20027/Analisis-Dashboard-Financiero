@@ -207,15 +207,84 @@ class UserService {
         }
     }
 
-    // Eliminar usuario (solo administradores)
+    // Eliminar usuario (solo administradores) - Eliminación completa
     async deleteUser(userId) {
         try {
-            const query = 'UPDATE Users SET IsActive = 0 WHERE Id = @param1';
-            await executeQuery(query, [userId]);
+            // Primero eliminar códigos de verificación relacionados
+            const deleteCodesQuery = 'DELETE FROM VerificationCodes WHERE UserId = @param1';
+            await executeQuery(deleteCodesQuery, [userId]);
+            
+            // Eliminar sesiones de usuario relacionadas
+            const deleteSessionsQuery = 'DELETE FROM UserSessions WHERE UserId = @param1';
+            await executeQuery(deleteSessionsQuery, [userId]);
+            
+            // Eliminar transacciones relacionadas
+            const deleteTransactionsQuery = 'DELETE FROM Transactions WHERE UserId = @param1';
+            await executeQuery(deleteTransactionsQuery, [userId]);
+            
+            // Eliminar categorías personalizadas del usuario
+            const deleteCategoriesQuery = 'DELETE FROM Categories WHERE UserId = @param1';
+            await executeQuery(deleteCategoriesQuery, [userId]);
+            
+            // Eliminar archivos procesados del usuario
+            const deleteFilesQuery = 'DELETE FROM ProcessedFiles WHERE UserId = @param1';
+            await executeQuery(deleteFilesQuery, [userId]);
+            
+            // Finalmente eliminar el usuario
+            const deleteUserQuery = 'DELETE FROM Users WHERE Id = @param1';
+            await executeQuery(deleteUserQuery, [userId]);
+            
             return true;
         } catch (error) {
             throw error;
         }
+    }
+
+    // Crear usuario (solo administradores)
+    async createUser(userData) {
+        try {
+            const { firstName, lastName, email, roleId, isActive = true } = userData;
+            
+            // Verificar si el usuario ya existe
+            const existingUser = await this.getUserByEmail(email);
+            if (existingUser) {
+                throw new Error('El usuario ya existe con este email');
+            }
+            
+            // Generar contraseña temporal
+            const tempPassword = this.generateTempPassword();
+            const saltRounds = 12;
+            const hashedPassword = await bcrypt.hash(tempPassword, saltRounds);
+            
+            const query = `
+                INSERT INTO Users (Email, PasswordHash, FirstName, LastName, RoleId, IsActive, IsVerified, CreatedAt)
+                VALUES (@param1, @param2, @param3, @param4, @param5, @param6, 1, GETDATE());
+                SELECT SCOPE_IDENTITY() AS Id;
+            `;
+            
+            const result = await executeQuery(query, [email, hashedPassword, firstName, lastName, roleId, isActive]);
+            const userId = result.recordset[0].Id;
+            
+            return {
+                success: true,
+                userId: userId,
+                tempPassword: tempPassword,
+                message: 'Usuario creado exitosamente'
+            };
+            
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    // Generar contraseña temporal
+    generateTempPassword() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < 8; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
     }
 
     // Obtener todos los roles

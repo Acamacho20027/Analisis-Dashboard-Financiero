@@ -3828,3 +3828,407 @@ body.categorias-financieras-page {
         max-width: none;
     }
 }
+
+/* Estilos para alertas */
+.alert {
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin: 16px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.alert-warning i {
+    color: #f39c12;
+    margin-top: 2px;
+}
+
+/* Estilos específicos para modales de gestión de usuarios */
+#userModal .modal-content {
+    background-color: #ffffff;
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    animation: slideIn 0.3s ease-out;
+    overflow: hidden;
+}
+
+#userModal .modal-header {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    padding: 2rem;
+    color: white;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+#userModal .modal-icon {
+    width: 48px;
+    height: 48px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: bounceIn 0.6s ease-out;
+    flex-shrink: 0;
+}
+
+#userModal .modal-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    flex: 1;
+}
+
+#userModal .close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+#userModal .close-btn:hover {
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#userModal .modal-body {
+    padding: 2rem;
+}
+
+#userModal .form-group {
+    margin-bottom: 1.5rem;
+}
+
+#userModal .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+#userModal .form-group input,
+#userModal .form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+#userModal .form-group input:focus,
+#userModal .form-group select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+#userModal .modal-footer {
+    padding: 1rem 2rem 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+#userModal .btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+#userModal .btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+#userModal .btn-secondary {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+
+#userModal .btn-secondary:hover {
+    background-color: #e5e7eb;
+}
+
+#userModal .btn-primary {
+    background-color: #3b82f6;
+    color: white;
+}
+
+#userModal .btn-primary:hover {
+    background-color: #2563eb;
+}
+
+/* Animaciones */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Estilos específicos para modal de eliminación */
+#deleteModal .modal-content {
+    background-color: #ffffff;
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    animation: slideIn 0.3s ease-out;
+    overflow: hidden;
+}
+
+#deleteModal .modal-header {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    padding: 2rem;
+    color: white;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+#deleteModal .modal-icon {
+    width: 48px;
+    height: 48px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: bounceIn 0.6s ease-out;
+    flex-shrink: 0;
+}
+
+#deleteModal .modal-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    flex: 1;
+}
+
+#deleteModal .close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+#deleteModal .close-btn:hover {
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#deleteModal .modal-body {
+    padding: 2rem;
+    text-align: center;
+}
+
+#deleteModal .modal-message {
+    color: #374151;
+    font-size: 1rem;
+    margin: 0 0 1.5rem 0;
+    line-height: 1.6;
+}
+
+#deleteModal .modal-details {
+    margin: 1.5rem 0;
+}
+
+#deleteModal .detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding: 0.75rem;
+    background-color: #fef2f2;
+    border-radius: 8px;
+    border-left: 4px solid #dc2626;
+}
+
+#deleteModal .detail-icon {
+    width: 20px;
+    height: 20px;
+    color: #dc2626;
+    flex-shrink: 0;
+}
+
+#deleteModal .detail-item span {
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+#deleteModal .modal-footer {
+    padding: 1rem 2rem 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+#deleteModal .btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+#deleteModal .btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+#deleteModal .btn-secondary {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+
+#deleteModal .btn-secondary:hover {
+    background-color: #e5e7eb;
+}
+
+#deleteModal .btn-danger {
+    background-color: #dc2626;
+    color: white;
+}
+
+#deleteModal .btn-danger:hover {
+    background-color: #b91c1c;
+}
+
+/* Estilos específicos para modal de contraseña temporal */
+.modal-header.success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    padding: 2rem;
+    color: white;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.modal-header.success .modal-icon {
+    width: 48px;
+    height: 48px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: bounceIn 0.6s ease-out;
+    flex-shrink: 0;
+}
+
+.modal-header.success .modal-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    flex: 1;
+}
+
+.modal-header.success .close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.modal-header.success .close-btn:hover {
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.1);
+}

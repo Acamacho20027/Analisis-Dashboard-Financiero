@@ -86,14 +86,17 @@ Una aplicación web moderna y completa para el control de finanzas personales, c
 - **🆕 Tarjetas de resumen** con métricas destacadas y colores semánticos
 
 ### 👥 Gestión de Usuarios (Solo Administradores)
-- **Registro de usuarios** con formulario completo y validaciones
+- **Creación de usuarios** con formulario completo y validaciones
 - **Edición de usuarios** con actualización de datos personales
-- **Historial de usuarios** registrados y modificados
-- **Eliminación lógica** de usuarios con confirmación
-- **Sistema de roles** con permisos diferenciados
+- **Eliminación completa** de usuarios y todos sus datos relacionados
+- **Sistema de roles** con permisos diferenciados (Usuario/Administrador)
 - **Interfaz administrativa** exclusiva para administradores
 - **Validación de permisos** en frontend y backend
 - **Base de datos SQL Server** para gestión de usuarios
+- **Contraseñas temporales** generadas automáticamente para nuevos usuarios
+- **Modales elegantes** con diseño profesional y animaciones
+- **Eliminación en cascada** de transacciones, categorías y archivos del usuario
+- **Verificación automática** de usuarios creados por administradores
 
 ### 🎯 Metas de Ahorro Personalizadas
 - **Barras de progreso visuales** con porcentajes
@@ -350,10 +353,11 @@ python start_python_api.py
 - **GET** `/api/profile` - Perfil del usuario autenticado
 
 ### **Endpoints de Gestión de Usuarios (Solo Administradores)**
+- **POST** `/api/users` - Crear nuevo usuario con contraseña temporal
 - **GET** `/api/users` - Obtener todos los usuarios
 - **GET** `/api/users/:id` - Obtener usuario específico
 - **PUT** `/api/users/:id` - Actualizar usuario
-- **DELETE** `/api/users/:id` - Eliminar usuario (lógico)
+- **DELETE** `/api/users/:id` - Eliminar usuario completamente (cascada)
 - **GET** `/api/roles` - Obtener roles disponibles
 
 ### **Endpoints de Transacciones**
@@ -496,7 +500,24 @@ Proyecto_Analisis_Financiero/
 
 ## 🔄 Historial de Versiones
 
-### v3.9.0 (Actual) - **Sistema de Roles y Gestión de Usuarios**
+### v3.10.0 (Actual) - **Gestión Completa de Usuarios con Modales Profesionales**
+- ✅ **Creación de usuarios** con formulario completo y validaciones
+- ✅ **Contraseñas temporales** generadas automáticamente para nuevos usuarios
+- ✅ **Eliminación completa** de usuarios y todos sus datos relacionados (cascada)
+- ✅ **Modales elegantes** con diseño profesional y animaciones suaves
+- ✅ **Layout horizontal** en headers con título centrado e icono lateral
+- ✅ **Eliminación en cascada** de transacciones, categorías y archivos del usuario
+- ✅ **Verificación automática** de usuarios creados por administradores
+- ✅ **Modal de contraseña temporal** con funcionalidad de copiar al portapapeles
+- ✅ **Estilos CSS específicos** para cada modal con gradientes y animaciones
+- ✅ **Botones con iconos SVG** y efectos hover profesionales
+- ✅ **Sistema de confirmación** mejorado para eliminación de usuarios
+- ✅ **API REST actualizada** con endpoint POST para creación de usuarios
+- ✅ **Interfaz administrativa** completamente renovada y profesional
+- ✅ **Diseño responsive** que se adapta a todos los dispositivos
+- ✅ **Experiencia de usuario** mejorada con feedback visual inmediato
+
+### v3.9.0 - **Sistema de Roles y Gestión de Usuarios**
 - ✅ **Sistema de roles** (Usuario/Administrador) completamente implementado
 - ✅ **Gestión de usuarios** exclusiva para administradores
 - ✅ **Datos específicos por usuario** en todos los módulos

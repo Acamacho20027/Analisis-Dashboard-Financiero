@@ -217,13 +217,24 @@ async function saveUser() {
                 body: JSON.stringify(userData)
             });
         } else {
-            // Crear nuevo usuario (esto requeriría una ruta de creación)
-            showErrorMessage('La creación de usuarios no está implementada aún');
-            return;
+            // Crear nuevo usuario
+            response = await apiRequest('/api/users', {
+                method: 'POST',
+                body: JSON.stringify(userData)
+            });
         }
         
         if (response.success) {
-            showSuccessMessage(isEditMode ? 'Usuario actualizado exitosamente' : 'Usuario creado exitosamente');
+            if (isEditMode) {
+                showSuccessMessage('Usuario actualizado exitosamente');
+            } else {
+                // Mostrar contraseña temporal para el nuevo usuario
+                const tempPassword = response.tempPassword;
+                showSuccessMessage(`Usuario creado exitosamente. Contraseña temporal: ${tempPassword}`);
+                
+                // Mostrar modal con la contraseña temporal
+                showTempPasswordModal(response.userId, tempPassword);
+            }
             closeModal();
             loadUsers();
         } else {
@@ -343,6 +354,99 @@ function showMessage(message, type) {
             messageDiv.parentNode.removeChild(messageDiv);
         }
     }, 5000);
+}
+
+// Mostrar modal con contraseña temporal
+function showTempPasswordModal(userId, tempPassword) {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'block';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header success">
+                <div class="modal-icon success">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <h3 class="modal-title">¡Usuario Creado Exitosamente!</h3>
+                <button class="close-btn" onclick="this.closest('.modal').remove()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-message">El usuario ha sido creado correctamente. A continuación se muestra la contraseña temporal que debe compartir con el usuario.</p>
+                <div class="modal-details">
+                    <div class="detail-item">
+                        <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                        <span>Contraseña temporal generada automáticamente</span>
+                    </div>
+                    <div class="detail-item">
+                        <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Usuario verificado automáticamente</span>
+                    </div>
+                    <div class="detail-item">
+                        <svg class="detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                        <span>Debe cambiarse en el primer inicio de sesión</span>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 1.5rem;">
+                    <label>Contraseña Temporal:</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="text" id="tempPasswordDisplay" value="${tempPassword}" readonly 
+                               style="flex: 1; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: monospace; font-size: 18px; letter-spacing: 3px; text-align: center; background-color: #f9fafb;">
+                        <button onclick="copyTempPassword()" class="btn btn-outline" style="padding: 12px 16px;">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px; height: 16px; margin-right: 8px;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                            Copiar
+                        </button>
+                    </div>
+                </div>
+                <div class="alert alert-warning" style="margin-top: 1.5rem;">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 20px; height: 20px; margin-right: 8px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                    <strong>Importante:</strong> Esta contraseña temporal debe ser compartida con el usuario de forma segura.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="this.closest('.modal').remove()">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Entendido
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+// Copiar contraseña temporal al portapapeles
+function copyTempPassword() {
+    const tempPasswordInput = document.getElementById('tempPasswordDisplay');
+    if (tempPasswordInput) {
+        tempPasswordInput.select();
+        tempPasswordInput.setSelectionRange(0, 99999); // Para dispositivos móviles
+        document.execCommand('copy');
+        
+        // Mostrar confirmación
+        const button = event.target.closest('button');
+        const originalText = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-check"></i> Copiado';
+        button.style.backgroundColor = '#10b981';
+        
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.style.backgroundColor = '';
+        }, 2000);
+    }
 }
 
 // Cerrar sesión
