@@ -3142,3 +3142,139 @@ body.categorias-financieras-page {
         left: 1rem;
     }
 }
+
+/* Estilos del Modal de Confirmación */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        backdrop-filter: blur(0px);
+    }
+    to {
+        opacity: 1;
+        backdrop-filter: blur(4px);
+    }
+}
+
+.modal-container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    max-width: 400px;
+    width: 90%;
+    max-height: 90vh;
+    overflow: hidden;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-header {
+    padding: 24px 24px 16px 24px;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.modal-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.modal-icon.danger {
+    background-color: #fef2f2;
+    color: #dc2626;
+}
+
+.modal-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.modal-body {
+    padding: 20px 24px;
+}
+
+.modal-body p {
+    color: #6b7280;
+    line-height: 1.5;
+    margin: 0 0 8px 0;
+}
+
+.modal-warning {
+    color: #dc2626 !important;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.modal-footer {
+    padding: 16px 24px 24px 24px;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    border-top: 1px solid #e5e7eb;
+}
+
+.modal-footer .btn {
+    min-width: 100px;
+    justify-content: center;
+}
+
+/* Animación de cierre del modal */
+.modal-overlay.closing {
+    animation: modalFadeOut 0.2s ease-in forwards;
+}
+
+.modal-overlay.closing .modal-container {
+    animation: modalSlideOut 0.2s ease-in forwards;
+}
+
+@keyframes modalFadeOut {
+    to {
+        opacity: 0;
+        backdrop-filter: blur(0px);
+    }
+}
+
+@keyframes modalSlideOut {
+    to {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+}

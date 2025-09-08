@@ -2,6 +2,7 @@
 let transaccionesData = [];
 let categoriasData = [];
 let reportesHistorial = [];
+let reporteAEliminar = null;
 
 document.addEventListener('DOMContentLoaded', function() {
     // Verificar autenticación
@@ -10,10 +11,24 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
+    // Verificar que jsPDF esté cargado
+    setTimeout(() => {
+        if (typeof window.jspdf === 'undefined') {
+            console.error('jsPDF no está cargado');
+            mostrarError('Error: La librería jsPDF no se cargó correctamente. Por favor, recarga la página.');
+            return;
+        }
+        console.log('jsPDF cargado correctamente');
+    }, 1000);
+
     // Configurar event listeners
-    document.getElementById('downloadTransactionsPDF').addEventListener('click', () => descargarReportePDF('transacciones'));
-    document.getElementById('downloadCategoriesPDF').addEventListener('click', () => descargarReportePDF('categorias'));
+    document.getElementById('downloadTransactionsPDF').addEventListener('click', () => descargarReportePDF('transactions'));
+    document.getElementById('downloadCategoriesPDF').addEventListener('click', () => descargarReportePDF('categories'));
     document.getElementById('logoutBtn').addEventListener('click', cerrarSesion);
+    
+    // Configurar modal de eliminación
+    document.getElementById('cancelDelete').addEventListener('click', cerrarModal);
+    document.getElementById('confirmDelete').addEventListener('click', confirmarEliminacion);
     
     // Cargar datos iniciales
     cargarDatosIniciales();
@@ -380,9 +395,17 @@ function mostrarHistorialReportes() {
 }
 
 async function descargarReportePDF(tipo) {
+    const boton = document.getElementById(`download${tipo.charAt(0).toUpperCase() + tipo.slice(1)}PDF`);
+    
+    if (!boton) {
+        console.error(`Botón no encontrado: download${tipo.charAt(0).toUpperCase() + tipo.slice(1)}PDF`);
+        mostrarError('Error: No se pudo encontrar el botón de descarga.');
+        return;
+    }
+    
+    const textoOriginal = boton.innerHTML;
+    
     try {
-        const boton = document.getElementById(`download${tipo.charAt(0).toUpperCase() + tipo.slice(1)}PDF`);
-        const textoOriginal = boton.innerHTML;
         
         // Mostrar estado de carga
         boton.innerHTML = `
@@ -394,19 +417,20 @@ async function descargarReportePDF(tipo) {
         `;
         boton.disabled = true;
 
+        // Verificar que jsPDF esté cargado
+        if (typeof window.jspdf === 'undefined') {
+            throw new Error('La librería jsPDF no está cargada correctamente');
+        }
+        
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         
-        // Configuración del documento
-        doc.setFontSize(20);
-        doc.text('FinScope - Reporte Financiero', 20, 30);
+        // Configuración del documento con diseño profesional
+        await crearEncabezadoPDF(doc);
         
-        doc.setFontSize(12);
-        doc.text(`Generado el: ${new Date().toLocaleDateString('es-ES')} a las ${new Date().toLocaleTimeString('es-ES')}`, 20, 45);
-        
-        if (tipo === 'transacciones') {
+        if (tipo === 'transactions') {
             await generarPDFTransacciones(doc);
-        } else if (tipo === 'categorias') {
+        } else if (tipo === 'categories') {
             await generarPDFCategorias(doc);
         }
         
@@ -425,92 +449,318 @@ async function descargarReportePDF(tipo) {
         
     } catch (error) {
         console.error('Error al generar PDF:', error);
-        mostrarError('Error al generar el PDF. Asegúrate de que la librería jsPDF esté cargada.');
         
-        // Restaurar botón
-        const boton = document.getElementById(`download${tipo.charAt(0).toUpperCase() + tipo.slice(1)}PDF`);
-        boton.innerHTML = textoOriginal;
-        boton.disabled = false;
+        let mensajeError = 'Error al generar el PDF.';
+        if (error.message.includes('jsPDF no está cargada')) {
+            mensajeError = 'Error: La librería jsPDF no se cargó correctamente. Por favor, recarga la página e intenta nuevamente.';
+        } else if (error.message.includes('jsPDF')) {
+            mensajeError = 'Error con la librería jsPDF. Por favor, verifica tu conexión a internet y recarga la página.';
+        } else {
+            mensajeError = `Error al generar el PDF: ${error.message}`;
+        }
+        
+        mostrarError(mensajeError);
+        
+        // Restaurar botón de forma segura
+        try {
+            if (boton && textoOriginal) {
+                boton.innerHTML = textoOriginal;
+                boton.disabled = false;
+            } else {
+                console.error('No se pudo restaurar el botón: botón o textoOriginal no disponible');
+            }
+        } catch (restoreError) {
+            console.error('Error al restaurar el botón:', restoreError);
+        }
+    }
+}
+
+async function crearEncabezadoPDF(doc) {
+    // Fondo del encabezado
+    doc.setFillColor(59, 130, 246); // Color azul FinScope
+    doc.rect(0, 0, 210, 50, 'F');
+    
+    // Logo/Texto FinScope
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(24);
+    doc.setFont('helvetica', 'bold');
+    doc.text('FinScope', 20, 25);
+    
+    // Subtítulo
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Sistema de Análisis Financiero', 20, 35);
+    
+    // Fecha de generación
+    doc.setFontSize(10);
+    doc.text(`Generado: ${new Date().toLocaleDateString('es-ES')} ${new Date().toLocaleTimeString('es-ES')}`, 150, 25);
+    
+    // Línea decorativa
+    doc.setDrawColor(255, 255, 255);
+    doc.setLineWidth(2);
+    doc.line(20, 40, 190, 40);
+    
+    // Resetear color para el contenido
+    doc.setTextColor(0, 0, 0);
+}
+
+async function crearPiePDF(doc) {
+    const pageCount = doc.internal.getNumberOfPages();
+    
+    for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        
+        // Línea superior del pie
+        doc.setDrawColor(59, 130, 246);
+        doc.setLineWidth(1);
+        doc.line(20, 280, 190, 280);
+        
+        // Texto del pie
+        doc.setFontSize(8);
+        doc.setTextColor(100, 100, 100);
+        doc.text('FinScope - Sistema de Análisis Financiero', 20, 285);
+        doc.text(`Página ${i} de ${pageCount}`, 150, 285);
     }
 }
 
 async function generarPDFTransacciones(doc) {
+    let yPos = 70;
+    
     if (transaccionesData.length === 0) {
-            doc.setFontSize(14);
-        doc.text('No hay transacciones para mostrar', 20, 70);
+        // Mensaje cuando no hay datos
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(100, 100, 100);
+        doc.text('No hay transacciones para mostrar', 20, yPos);
         return;
     }
 
-            // Resumen
-            doc.setFontSize(16);
-            doc.text('Resumen de Transacciones', 20, 70);
-            
+    // Título de la sección
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(59, 130, 246);
+    doc.text('Resumen de Transacciones', 20, yPos);
+    yPos += 15;
+    
+    // Calcular resumen
     const totalIngresos = transaccionesData.filter(t => t.Type === 'ingreso')
         .reduce((sum, t) => sum + parseFloat(t.Amount), 0);
     const totalGastos = transaccionesData.filter(t => t.Type === 'gasto')
         .reduce((sum, t) => sum + parseFloat(t.Amount), 0);
-            const balance = totalIngresos - totalGastos;
-            
-            doc.setFontSize(12);
-            doc.text(`Total Ingresos: $${totalIngresos.toFixed(2)}`, 20, 85);
-            doc.text(`Total Gastos: $${totalGastos.toFixed(2)}`, 20, 95);
-            doc.text(`Balance: $${balance.toFixed(2)}`, 20, 105);
-            
-            // Tabla de transacciones
-            doc.setFontSize(14);
-            doc.text('Detalle de Transacciones', 20, 125);
-            
-            let yPos = 140;
-    transaccionesData.forEach((transaccion, index) => {
-                if (yPos > 250) {
-                    doc.addPage();
-                    yPos = 20;
-                }
-                
-                doc.setFontSize(10);
-        doc.text(`${formatearFecha(transaccion.TransactionDate)}`, 20, yPos);
-        doc.text(transaccion.CategoryName, 60, yPos);
-        doc.text(transaccion.Description || '-', 100, yPos);
-        doc.text(transaccion.Type, 150, yPos);
-        doc.text(`$${parseFloat(transaccion.Amount).toFixed(2)}`, 170, yPos);
-                
-                yPos += 10;
-            });
-        }
-        
-async function generarPDFCategorias(doc) {
-    if (categoriasData.length === 0) {
-        doc.setFontSize(14);
-        doc.text('No hay categorías para mostrar', 20, 70);
-        return;
-    }
-
-    // Título
-    doc.setFontSize(16);
-    doc.text('Categorías Financieras', 20, 70);
+    const balance = totalIngresos - totalGastos;
     
-    let yPos = 85;
-    categoriasData.forEach((categoria, index) => {
-        if (yPos > 250) {
+    // Tarjetas de resumen
+    await crearTarjetaResumen(doc, 'Total Ingresos', totalIngresos, 20, yPos, '#10b981');
+    await crearTarjetaResumen(doc, 'Total Gastos', totalGastos, 80, yPos, '#ef4444');
+    await crearTarjetaResumen(doc, 'Balance', balance, 140, yPos, balance >= 0 ? '#10b981' : '#ef4444');
+    
+    yPos += 40;
+    
+    // Título de la tabla
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(59, 130, 246);
+    doc.text(`Detalle de Transacciones (${transaccionesData.length} registros)`, 20, yPos);
+    yPos += 15;
+    
+    // Crear tabla de transacciones
+    await crearTablaTransacciones(doc, yPos);
+    
+    // Agregar pie de página
+    await crearPiePDF(doc);
+}
+
+async function crearTarjetaResumen(doc, titulo, monto, x, y, color) {
+    // Fondo de la tarjeta
+    doc.setFillColor(248, 250, 252);
+    doc.roundedRect(x, y, 50, 25, 3, 3, 'F');
+    
+    // Borde de la tarjeta
+    doc.setDrawColor(229, 231, 235);
+    doc.setLineWidth(1);
+    doc.roundedRect(x, y, 50, 25, 3, 3, 'S');
+    
+    // Título
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 100, 100);
+    doc.text(titulo, x + 5, y + 8);
+    
+    // Monto
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(color);
+    doc.text(`$${monto.toFixed(2)}`, x + 5, y + 18);
+}
+
+async function crearTablaTransacciones(doc, yInicial) {
+    let yPos = yInicial;
+    
+    // Encabezados de la tabla
+    doc.setFillColor(59, 130, 246);
+    doc.rect(20, yPos, 170, 12, 'F');
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Fecha', 25, yPos + 8);
+    doc.text('Categoría', 50, yPos + 8);
+    doc.text('Descripción', 90, yPos + 8);
+    doc.text('Tipo', 140, yPos + 8);
+    doc.text('Monto', 160, yPos + 8);
+    
+    yPos += 15;
+    
+    // Filas de datos
+    transaccionesData.forEach((transaccion, index) => {
+        if (yPos > 260) {
             doc.addPage();
             yPos = 20;
         }
         
-        doc.setFontSize(12);
-        doc.text(`${categoria.Id}. ${categoria.Name}`, 20, yPos);
-        doc.setFontSize(10);
-        doc.text(`Tipo: ${categoria.Type}`, 20, yPos + 8);
-        doc.text(`Por defecto: ${categoria.IsDefault ? 'Sí' : 'No'}`, 20, yPos + 16);
+        // Fondo alternado
+        if (index % 2 === 0) {
+            doc.setFillColor(248, 250, 252);
+            doc.rect(20, yPos - 3, 170, 10, 'F');
+        }
         
-        yPos += 30;
+        // Datos
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'normal');
+        doc.text(formatearFecha(transaccion.TransactionDate), 25, yPos + 3);
+        doc.text(transaccion.CategoryName, 50, yPos + 3);
+        doc.text(transaccion.Description || '-', 90, yPos + 3);
+        
+        // Tipo con color
+        const tipoColor = transaccion.Type === 'ingreso' ? '#10b981' : '#ef4444';
+        doc.setTextColor(tipoColor);
+        doc.text(transaccion.Type.charAt(0).toUpperCase() + transaccion.Type.slice(1), 140, yPos + 3);
+        
+        // Monto con color
+        doc.setTextColor(tipoColor);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`$${parseFloat(transaccion.Amount).toFixed(2)}`, 160, yPos + 3);
+        
+        yPos += 10;
+    });
+}
+        
+async function generarPDFCategorias(doc) {
+    let yPos = 70;
+    
+    if (categoriasData.length === 0) {
+        // Mensaje cuando no hay datos
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(100, 100, 100);
+        doc.text('No hay categorías para mostrar', 20, yPos);
+        return;
+    }
+
+    // Título de la sección
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(59, 130, 246);
+    doc.text('Categorías Financieras', 20, yPos);
+    yPos += 15;
+    
+    // Estadísticas rápidas
+    const totalCategorias = categoriasData.length;
+    const categoriasIngreso = categoriasData.filter(c => c.Type === 'ingreso').length;
+    const categoriasGasto = categoriasData.filter(c => c.Type === 'gasto').length;
+    const categoriasDefault = categoriasData.filter(c => c.IsDefault).length;
+    
+    // Tarjetas de estadísticas
+    await crearTarjetaResumen(doc, 'Total Categorías', totalCategorias, 20, yPos, '#3b82f6');
+    await crearTarjetaResumen(doc, 'Ingresos', categoriasIngreso, 80, yPos, '#10b981');
+    await crearTarjetaResumen(doc, 'Gastos', categoriasGasto, 140, yPos, '#ef4444');
+    
+    yPos += 40;
+    
+    // Título de la tabla
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(59, 130, 246);
+    doc.text(`Lista de Categorías (${totalCategorias} registros)`, 20, yPos);
+    yPos += 15;
+    
+    // Crear tabla de categorías
+    await crearTablaCategorias(doc, yPos);
+    
+    // Agregar pie de página
+    await crearPiePDF(doc);
+}
+
+async function crearTablaCategorias(doc, yInicial) {
+    let yPos = yInicial;
+    
+    // Encabezados de la tabla
+    doc.setFillColor(59, 130, 246);
+    doc.rect(20, yPos, 170, 12, 'F');
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('ID', 25, yPos + 8);
+    doc.text('Nombre', 40, yPos + 8);
+    doc.text('Tipo', 100, yPos + 8);
+    doc.text('Por Defecto', 130, yPos + 8);
+    doc.text('Color', 160, yPos + 8);
+    
+    yPos += 15;
+    
+    // Filas de datos
+    categoriasData.forEach((categoria, index) => {
+        if (yPos > 260) {
+            doc.addPage();
+            yPos = 20;
+        }
+        
+        // Fondo alternado
+        if (index % 2 === 0) {
+            doc.setFillColor(248, 250, 252);
+            doc.rect(20, yPos - 3, 170, 10, 'F');
+        }
+        
+        // Datos
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'normal');
+        doc.text(categoria.Id.toString(), 25, yPos + 3);
+        doc.text(categoria.Name, 40, yPos + 3);
+        
+        // Tipo con color
+        const tipoColor = categoria.Type === 'ingreso' ? '#10b981' : '#ef4444';
+        doc.setTextColor(tipoColor);
+        doc.setFont('helvetica', 'bold');
+        doc.text(categoria.Type.charAt(0).toUpperCase() + categoria.Type.slice(1), 100, yPos + 3);
+        
+        // Por defecto
+        doc.setTextColor(0, 0, 0);
+        doc.setFont('helvetica', 'normal');
+        doc.text(categoria.IsDefault ? 'Sí' : 'No', 130, yPos + 3);
+        
+        // Color (círculo de color)
+        if (categoria.Color) {
+            const colorHex = categoria.Color.replace('#', '');
+            const r = parseInt(colorHex.substr(0, 2), 16);
+            const g = parseInt(colorHex.substr(2, 2), 16);
+            const b = parseInt(colorHex.substr(4, 2), 16);
+            
+            doc.setFillColor(r, g, b);
+            doc.circle(160, yPos + 3, 2, 'F');
+        }
+        
+        yPos += 10;
     });
 }
 
 function agregarAlHistorial(tipo, nombreArchivo) {
     const nuevoReporte = {
         id: Date.now().toString(),
-        tipo: tipo === 'transacciones' ? 'Transacciones' : 'Categorías',
-        titulo: `Reporte de ${tipo === 'transacciones' ? 'Transacciones' : 'Categorías'}`,
+        tipo: tipo === 'transactions' ? 'Transacciones' : 'Categorías',
+        titulo: `Reporte de ${tipo === 'transactions' ? 'Transacciones' : 'Categorías'}`,
         fechaGeneracion: new Date().toISOString(),
         nombreArchivo: nombreArchivo
     };
@@ -529,11 +779,35 @@ function redescargarReporte(reporteId) {
 }
 
 function eliminarReporte(reporteId) {
-    if (confirm('¿Estás seguro de que quieres eliminar este reporte del historial?')) {
-        reportesHistorial = reportesHistorial.filter(r => r.id !== reporteId);
+    reporteAEliminar = reporteId;
+    mostrarModal();
+}
+
+function mostrarModal() {
+    const modal = document.getElementById('deleteModal');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function cerrarModal() {
+    const modal = document.getElementById('deleteModal');
+    modal.classList.add('closing');
+    
+    setTimeout(() => {
+        modal.style.display = 'none';
+        modal.classList.remove('closing');
+        document.body.style.overflow = 'auto';
+        reporteAEliminar = null;
+    }, 200);
+}
+
+function confirmarEliminacion() {
+    if (reporteAEliminar) {
+        reportesHistorial = reportesHistorial.filter(r => r.id !== reporteAEliminar);
         localStorage.setItem('reportesHistorial', JSON.stringify(reportesHistorial));
         mostrarHistorialReportes();
         mostrarExito('Reporte eliminado del historial');
+        cerrarModal();
     }
 }
 
