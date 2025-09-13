@@ -2279,6 +2279,39 @@ body.categorias-financieras-page {
     width: 1200px;
 }
 
+#analysisViewModal .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    position: relative;
+}
+
+#analysisViewModal .modal-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    flex: 1;
+}
+
+/* Estilos para Modal de Confirmación de Eliminación */
+#deleteConfirmModal .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    position: relative;
+}
+
+#deleteConfirmModal .modal-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    flex: 1;
+}
+
 #analysisViewModal .modal-body {
     max-height: 60vh;
     overflow-y: auto;

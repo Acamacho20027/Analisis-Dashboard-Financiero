@@ -500,7 +500,14 @@ Proyecto_Analisis_Financiero/
 
 ## 🔄 Historial de Versiones
 
-### v3.10.0 (Actual) - **Gestión Completa de Usuarios con Modales Profesionales**
+### v3.10.1 (Actual) - **Mejoras en UI de Modales de Análisis de Archivos**
+- ✅ **Títulos centrados** en modales de análisis y eliminación de archivos
+- ✅ **Layout mejorado** con flexbox para centrado perfecto de títulos
+- ✅ **Consistencia visual** en todos los modales del sistema
+- ✅ **Estilos específicos** para modales de análisis de archivos
+- ✅ **Experiencia de usuario** mejorada con diseño más profesional
+
+### v3.10.0 - **Gestión Completa de Usuarios con Modales Profesionales**
 - ✅ **Creación de usuarios** con formulario completo y validaciones
 - ✅ **Contraseñas temporales** generadas automáticamente para nuevos usuarios
 - ✅ **Eliminación completa** de usuarios y todos sus datos relacionados (cascada)
