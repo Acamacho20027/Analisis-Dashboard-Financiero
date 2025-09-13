@@ -169,18 +169,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Botón para volver al login
     const backButton = document.createElement('button');
-    backButton.textContent = '← Volver al Login';
     backButton.className = 'back-btn';
-    backButton.style.cssText = `
-        position: absolute;
-        top: 2rem;
-        left: 2rem;
-        padding: 0.5rem 1rem;
-        background-color: #f0f0f0;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 0.9rem;
+    backButton.innerHTML = `
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Volver al Login
     `;
     
     backButton.addEventListener('click', function() {
@@ -190,14 +184,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     document.body.appendChild(backButton);
-    
-    // Estilos para el botón de volver
-    backButton.addEventListener('mouseenter', function() {
-        this.style.backgroundColor = '#e0e0e0';
-    });
-    
-    backButton.addEventListener('mouseleave', function() {
-        this.style.backgroundColor = '#f0f0f0';
-    });
     
 });
