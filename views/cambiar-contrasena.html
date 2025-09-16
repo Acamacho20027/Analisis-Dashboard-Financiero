@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinScope - Cambiar Contraseña</title>
+    <link rel="stylesheet" href="/styles/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Columna Izquierda - Formulario de cambio de contraseña -->
+        <div class="left-column">
+            <div class="login-content">
+                <div class="logo">
+                    <div class="logo-text">
+                        <span class="core">Fin</span><span class="wall">Scope</span>
+                    </div>
+                </div>
+                
+                <h1 class="welcome">Cambiar Contraseña</h1>
+                
+                <form id="changePasswordForm" class="login-form change-password-form">
+                            <div class="input-group">
+                                <label for="email">Correo electrónico:</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                    
+                    <div class="input-group">
+                        <label for="tempPassword">Contraseña actual:</label>
+                        <input type="password" id="tempPassword" name="tempPassword" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="newPassword">Nueva contraseña:</label>
+                        <input type="password" id="newPassword" name="newPassword" required minlength="8">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="confirmPassword">Confirmar nueva contraseña:</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required minlength="8">
+                    </div>
+                    
+                    <button type="submit" class="login-btn">Cambiar Contraseña</button>
+                </form>
+                
+                        <div class="login-links password-links">
+                            <button id="backToLoginBtn" class="back-btn">
+                                Volver al Login
+                            </button>
+                        </div>
+                
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+                <div id="successMessage" class="success-message" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <!-- Columna Derecha - Información -->
+        <div class="right-column">
+            <div class="info-container">
+                <div class="info-box">
+                    <div class="info-content">
+                        <div class="info-icon">
+                            <img src="/images/secure-access-icon.png" alt="Seguridad" class="feature-icon">
+                        </div>
+                        <div class="info-text">
+                            <h3>Seguridad de Contraseñas</h3>
+                            <p>Tu nueva contraseña debe tener al menos 8 caracteres y ser diferente a la contraseña temporal. Esto garantiza la seguridad de tu cuenta.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <div class="info-content">
+                        <div class="info-icon">
+                            <img src="/images/two-factors-security.png" alt="Verificación" class="feature-icon">
+                        </div>
+                        <div class="info-text">
+                            <h3>Verificación de Identidad</h3>
+                            <p>Para cambiar tu contraseña, necesitamos verificar tu identidad con la contraseña temporal que te proporcionamos.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <div class="info-content">
+                        <div class="info-icon">
+                            <img src="/images/dashboard-mockup.png" alt="Acceso" class="feature-icon">
+                        </div>
+                        <div class="info-text">
+                            <h3>Acceso Seguro</h3>
+                            <p>Una vez cambiada tu contraseña, podrás acceder de forma segura a todas las funcionalidades de FinScope.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/scripts/auth/cambiar-contrasena.js?v=2"></script>
+</body>
+</html>

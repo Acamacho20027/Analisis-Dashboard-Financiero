@@ -49,15 +49,21 @@ class UserService {
                 throw new Error('Usuario no encontrado');
             }
             
-            // Verificar contraseña
-            const isPasswordValid = await bcrypt.compare(password, user.PasswordHash);
-            if (!isPasswordValid) {
-                throw new Error('Contraseña incorrecta');
-            }
-            
             // Verificar si el usuario está activo
             if (!user.IsActive) {
                 throw new Error('Usuario inactivo');
+            }
+            
+            // Verificar contraseña (puede ser contraseña normal o temporal)
+            let isPasswordValid = await bcrypt.compare(password, user.PasswordHash);
+            
+            // Si no coincide con la contraseña principal, verificar si es contraseña temporal
+            if (!isPasswordValid && user.TempPassword) {
+                isPasswordValid = await bcrypt.compare(password, user.TempPassword);
+            }
+            
+            if (!isPasswordValid) {
+                throw new Error('Contraseña incorrecta');
             }
             
             // Actualizar último login
@@ -70,7 +76,8 @@ class UserService {
                     email: user.Email,
                     firstName: user.FirstName,
                     lastName: user.LastName,
-                    isVerified: user.IsVerified
+                    isVerified: user.IsVerified,
+                    mustChangePassword: user.MustChangePassword || false
                 }
             };
             
@@ -254,15 +261,18 @@ class UserService {
             // Generar contraseña temporal
             const tempPassword = this.generateTempPassword();
             const saltRounds = 12;
-            const hashedPassword = await bcrypt.hash(tempPassword, saltRounds);
+            const hashedTempPassword = await bcrypt.hash(tempPassword, saltRounds);
+            
+            // Crear una contraseña temporal para el campo PasswordHash también
+            const hashedPassword = hashedTempPassword;
             
             const query = `
-                INSERT INTO Users (Email, PasswordHash, FirstName, LastName, RoleId, IsActive, IsVerified, CreatedAt)
-                VALUES (@param1, @param2, @param3, @param4, @param5, @param6, 1, GETDATE());
+                INSERT INTO Users (Email, PasswordHash, FirstName, LastName, RoleId, IsActive, IsVerified, CreatedAt, TempPassword, MustChangePassword)
+                VALUES (@param1, @param2, @param3, @param4, @param5, @param6, 1, GETDATE(), @param7, 1);
                 SELECT SCOPE_IDENTITY() AS Id;
             `;
             
-            const result = await executeQuery(query, [email, hashedPassword, firstName, lastName, roleId, isActive]);
+            const result = await executeQuery(query, [email, hashedPassword, firstName, lastName, roleId, isActive, hashedTempPassword]);
             const userId = result.recordset[0].Id;
             
             return {
@@ -294,6 +304,76 @@ class UserService {
             const result = await executeQuery(query, []);
             return result.recordset;
         } catch (error) {
+            throw error;
+        }
+    }
+
+    // Cambiar contraseña
+    async changePassword(email, currentPassword, newPassword) {
+        try {
+            console.log('Iniciando cambio de contraseña para:', email);
+            
+            // Obtener usuario por email
+            const user = await this.getUserByEmail(email);
+            if (!user) {
+                console.log('Usuario no encontrado:', email);
+                return {
+                    success: false,
+                    message: 'Usuario no encontrado'
+                };
+            }
+            
+            console.log('Usuario encontrado:', user.Email, 'TempPassword existe:', !!user.TempPassword);
+
+            // Verificar contraseña actual (puede ser contraseña normal o temporal)
+            let isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.PasswordHash);
+            console.log('Contraseña principal válida:', isCurrentPasswordValid);
+            
+            // Si no coincide con la contraseña principal, verificar si es contraseña temporal
+            if (!isCurrentPasswordValid && user.TempPassword) {
+                isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.TempPassword);
+                console.log('Contraseña temporal válida:', isCurrentPasswordValid);
+            }
+
+            if (!isCurrentPasswordValid) {
+                console.log('Contraseña actual incorrecta');
+                return {
+                    success: false,
+                    message: 'Contraseña actual incorrecta'
+                };
+            }
+            
+            console.log('Contraseña actual verificada correctamente');
+
+            // Verificar que la nueva contraseña sea diferente a la actual
+            const isSamePassword = await bcrypt.compare(newPassword, user.PasswordHash);
+            if (isSamePassword) {
+                return {
+                    success: false,
+                    message: 'La nueva contraseña debe ser diferente a la contraseña actual'
+                };
+            }
+
+            // Encriptar nueva contraseña
+            const saltRounds = 12;
+            const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+
+            // Actualizar contraseña y limpiar contraseña temporal si existe
+            const query = `
+                UPDATE Users 
+                SET PasswordHash = @param1, TempPassword = NULL, MustChangePassword = 0
+                WHERE Email = @param2
+            `;
+            
+            await executeQuery(query, [hashedNewPassword, email]);
+
+            return {
+                success: true,
+                message: 'Contraseña cambiada exitosamente'
+            };
+
+        } catch (error) {
+            console.error('Error al cambiar contraseña:', error);
             throw error;
         }
     }

@@ -1159,25 +1159,40 @@ body.categorias-financieras-page {
     border-top: 1px solid #e5e7eb;
 }
 
-.login-links p {
-    color: #6b7280;
-    font-size: 0.9rem;
-    margin: 0;
-    margin-bottom: 1rem;
+.login-actions-horizontal {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-item {
+    display: flex;
+    justify-content: center;
 }
 
 .register-btn {
-    display: inline-block;
-    padding: 0.75rem 2rem;
+    display: flex !important;
+    padding: 0 !important;
     background-color: #3b82f6;
     color: white;
     text-decoration: none;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 600;
     transition: all 0.3s ease;
     border: 2px solid #3b82f6;
     box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+    width: 180px !important;
+    height: 48px !important;
+    text-align: center;
+    white-space: nowrap;
+    box-sizing: border-box !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    margin: 0 !important;
 }
 
 .register-btn:hover {
@@ -1190,6 +1205,41 @@ body.categorias-financieras-page {
 .register-btn:active {
     transform: translateY(0);
     box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+
+.change-password-btn {
+    display: flex !important;
+    padding: 0 !important;
+    background-color: #f8fafc;
+    color: #000000 !important;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid #e2e8f0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    width: 180px !important;
+    height: 48px !important;
+    text-align: center;
+    white-space: nowrap;
+    box-sizing: border-box !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+}
+
+.change-password-btn:hover {
+    background-color: #f1f5f9;
+    border-color: #3b82f6;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.15);
+}
+
+.change-password-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .link-text {
@@ -1223,10 +1273,112 @@ body.categorias-financieras-page {
         padding-top: 1rem;
     }
     
+    .login-actions-horizontal {
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+    
+    .action-item {
+        flex: 1;
+        min-width: 140px;
+    }
+    
+    .register-btn,
+    .change-password-btn {
+        padding: 0;
+        font-size: 0.85rem;
+        width: 100%;
+        height: 44px;
+        line-height: 1;
+    }
+    
     .success-message {
         margin-top: 0.75rem;
         font-size: 0.85rem;
     }
+}
+
+@media (max-width: 480px) {
+    .login-actions-horizontal {
+        gap: 0.5rem;
+    }
+    
+    .register-btn,
+    .change-password-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* ===== FORZAR ALTURA IDÉNTICA DE BOTONES ===== */
+.register-btn, .change-password-btn {
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    vertical-align: top !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    line-height: 1 !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+}
+
+/* Estilo específico para el botón de cambiar contraseña */
+.change-password-btn {
+    color: #000000 !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+}
+
+/* Forzar cambio de color - regla más específica */
+.login-actions-horizontal .change-password-btn {
+    color: #000000 !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+}
+
+/* Regla adicional para asegurar el cambio */
+a.change-password-btn {
+    color: #000000 !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+}
+
+/* ===== FORZAR CAMBIO DE COLOR DEL BOTÓN CAMBIAR CONTRASEÑA ===== */
+.change-password-btn,
+.change-password-btn:link,
+.change-password-btn:visited,
+.change-password-btn:hover,
+.change-password-btn:active {
+    color: #000000 !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+}
+
+/* Regla con máxima especificidad para forzar el cambio */
+body .login-links .login-actions-horizontal .action-item a.change-password-btn {
+    color: #000000 !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+}
+
+/* ===== GARANTIZAR TAMAÑO IDÉNTICO DE TEXTO ===== */
+.register-btn, .change-password-btn {
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+}
+
+/* Regla específica para ambos botones con máxima especificidad */
+body .login-links .login-actions-horizontal .action-item a.register-btn,
+body .login-links .login-actions-horizontal .action-item a.change-password-btn {
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
 }
 
 /* ===== CATEGORÍAS FINANCIERAS - ESTILOS ESPECÍFICOS ===== */
@@ -4270,6 +4422,141 @@ body.categorias-financieras-page {
     align-items: center;
     justify-content: center;
     gap: 1rem;
+}
+
+/* ===== ESTILOS PARA CAMBIO DE CONTRASEÑA ===== */
+
+/* Página de cambio de contraseña */
+.cambiar-contrasena-page {
+    background-color: #ffffff;
+    min-height: 100vh;
+    height: auto;
+    overflow: auto;
+}
+
+/* Estilos específicos para el formulario de cambio de contraseña */
+.change-password-form .input-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.change-password-form .input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333333;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.change-password-form .input-group input {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #5A6BFF;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.change-password-form .input-group input:focus {
+    border-color: #4A5BEF;
+    box-shadow: 0 0 0 3px rgba(90, 107, 255, 0.1);
+}
+
+/* Removed readonly styles - email field is now editable */
+
+.change-password-form .input-group input::placeholder {
+    color: #999999;
+}
+
+/* Mensajes de validación */
+.password-requirements {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+.password-requirements ul {
+    margin: 0.25rem 0 0 1rem;
+    padding: 0;
+}
+
+.password-requirements li {
+    margin-bottom: 0.25rem;
+}
+
+.password-requirements .valid {
+    color: #10b981;
+}
+
+.password-requirements .invalid {
+    color: #ef4444;
+}
+
+/* Botón de cambio de contraseña */
+.change-password-btn {
+    width: 100%;
+    padding: 1rem;
+    background-color: #E5E5E5;
+    color: #000000;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 1rem;
+}
+
+.change-password-btn:hover {
+    background-color: #D5D5D5;
+}
+
+.change-password-btn:active {
+    transform: translateY(1px);
+}
+
+.change-password-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Enlaces de navegación */
+.password-links {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.password-links .back-btn {
+    position: static;
+    margin: 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Responsive para cambio de contraseña */
+@media (max-width: 768px) {
+    .change-password-form .input-group {
+        margin-bottom: 1rem;
+    }
+    
+    .change-password-form .input-group input {
+        padding: 0.875rem;
+        font-size: 0.9rem;
+    }
+    
+    .change-password-btn {
+        padding: 0.875rem;
+        font-size: 1rem;
+    }
+    
+    .password-links {
+        margin-top: 1rem;
+        padding-top: 1rem;
+    }
 }
 
 .modal-header.success .modal-icon {

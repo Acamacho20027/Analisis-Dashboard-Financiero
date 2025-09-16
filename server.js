@@ -104,6 +104,11 @@ app.get('/gestion-usuarios', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'gestion-usuarios.html'));
 });
 
+// Ruta para cambio de contraseña
+app.get('/cambiar-contrasena', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'cambiar-contrasena.html'));
+});
+
 // ===== API RUTAS =====
 
 // ===== TRANSACCIONES =====
@@ -312,6 +317,7 @@ app.post('/api/login', async (req, res) => {
     // Validación básica
     if (!email || !password) {
       return res.status(400).json({ 
+        success: false,
         error: 'Correo y contraseña son requeridos' 
       });
     }
@@ -321,6 +327,7 @@ app.post('/api/login', async (req, res) => {
     
     if (!authResult.success) {
       return res.status(401).json({ 
+        success: false,
         error: 'Credenciales inválidas' 
       });
     }
@@ -348,13 +355,20 @@ app.post('/api/login', async (req, res) => {
     };
     
     // Enviar email
-    await transporter.sendMail(mailOptions);
+    try {
+      await transporter.sendMail(mailOptions);
+      console.log('Email enviado exitosamente a:', email);
+    } catch (emailError) {
+      console.error('Error al enviar email:', emailError);
+      // Continuar con la respuesta aunque falle el email
+    }
     
     res.json({ 
       success: true, 
       message: 'Código enviado exitosamente',
       maskedEmail: email.replace(/(.{2}).*(@.*)/, '$1••••••$2'),
-      userId: authResult.user.id
+      userId: authResult.user.id,
+      user: authResult.user
     });
     
   } catch (error) {
@@ -362,17 +376,20 @@ app.post('/api/login', async (req, res) => {
     
     if (error.message === 'Usuario no encontrado') {
       return res.status(401).json({ 
+        success: false,
         error: 'Usuario no encontrado' 
       });
     }
     
     if (error.message === 'Contraseña incorrecta') {
       return res.status(401).json({ 
+        success: false,
         error: 'Contraseña incorrecta' 
       });
     }
     
     res.status(500).json({ 
+      success: false,
       error: 'Error al procesar el login',
       message: error.message 
     });
@@ -439,6 +456,47 @@ app.post('/api/verify', async (req, res) => {
   } catch (error) {
     res.status(500).json({ 
       error: 'Error al verificar el código',
+      message: error.message 
+    });
+  }
+});
+
+// Ruta para cambiar contraseña
+app.post('/api/change-password', async (req, res) => {
+  try {
+    const { email, tempPassword, newPassword } = req.body;
+    
+    if (!email || !tempPassword || !newPassword) {
+      return res.status(400).json({ 
+        error: 'Email, contraseña actual y nueva contraseña son requeridos' 
+      });
+    }
+    
+    // Validar longitud de la nueva contraseña
+    if (newPassword.length < 8) {
+      return res.status(400).json({ 
+        error: 'La nueva contraseña debe tener al menos 8 caracteres' 
+      });
+    }
+    
+    // Cambiar contraseña
+    const result = await userService.changePassword(email, tempPassword, newPassword);
+    
+    if (result.success) {
+      res.json({
+        success: true,
+        message: 'Contraseña cambiada exitosamente'
+      });
+    } else {
+      res.status(400).json({
+        error: result.message
+      });
+    }
+    
+  } catch (error) {
+    console.error('Error al cambiar contraseña:', error);
+    res.status(500).json({ 
+      error: 'Error al cambiar la contraseña',
       message: error.message 
     });
   }

@@ -39,26 +39,36 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             const data = await response.json();
+            console.log('Respuesta del servidor:', data);
             
             if (data.success) {
                 // Guardar email en localStorage para la siguiente pantalla
                 localStorage.setItem('userEmail', email);
                 localStorage.setItem('maskedEmail', data.maskedEmail);
                 
-                // Redirigir a la pantalla de espera
-                window.location.href = '/views/espera.html';
+                // Verificar si el usuario debe cambiar su contraseña
+                if (data.user && data.user.mustChangePassword) {
+                    // Redirigir a cambio de contraseña
+                    window.location.href = '/views/cambiar-contrasena.html';
+                } else {
+                    // Redirigir a la pantalla de espera
+                    window.location.href = '/views/espera.html';
+                }
             } else {
+                // Restaurar botón antes de mostrar error
+                const submitBtn = loginForm.querySelector('button[type="submit"]');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
                 showError(data.error || 'Error al procesar el login');
             }
             
         } catch (error) {
             console.error('Error:', error);
-            showError('Error de conexión. Por favor, intenta de nuevo.');
-        } finally {
-            // Restaurar botón
+            // Restaurar botón antes de mostrar error
             const submitBtn = loginForm.querySelector('button[type="submit"]');
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
+            showError('Error de conexión. Por favor, intenta de nuevo.');
         }
     });
     

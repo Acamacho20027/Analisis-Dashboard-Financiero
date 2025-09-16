@@ -29,6 +29,8 @@ CREATE TABLE Users (
     IsVerified BIT DEFAULT 0,
     LastLoginAt DATETIME2 NULL,
     IsActive BIT DEFAULT 1,
+    TempPassword NVARCHAR(255) NULL, -- Contraseña temporal
+    MustChangePassword BIT DEFAULT 0, -- Indica si debe cambiar la contraseña
     FOREIGN KEY (RoleId) REFERENCES Roles(Id)
 );
 
@@ -222,6 +224,30 @@ UPDATE Users SET RoleId = 1 WHERE RoleId IS NULL OR RoleId = 0;
 PRINT 'Usuarios existentes actualizados con rol de Usuario.';
 GO
 
+-- Agregar columnas para cambio de contraseña si no existen
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Users') AND name = 'TempPassword')
+BEGIN
+    ALTER TABLE Users ADD TempPassword NVARCHAR(255) NULL;
+    PRINT 'Columna TempPassword agregada a tabla Users.';
+END
+ELSE
+BEGIN
+    PRINT 'Columna TempPassword ya existe en tabla Users.';
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Users') AND name = 'MustChangePassword')
+BEGIN
+    ALTER TABLE Users ADD MustChangePassword BIT DEFAULT 0;
+    PRINT 'Columna MustChangePassword agregada a tabla Users.';
+END
+ELSE
+BEGIN
+    PRINT 'Columna MustChangePassword ya existe en tabla Users.';
+END
+GO
+
 PRINT 'Base de datos FinScopeDB creada/actualizada exitosamente con todas las tablas y datos iniciales.';
 PRINT 'Sistema de roles implementado correctamente.';
+PRINT 'Sistema de cambio de contraseña implementado correctamente.';
 GO

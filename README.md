@@ -21,6 +21,9 @@ Una aplicación web moderna y completa para el control de finanzas personales, c
 - **Registro de usuarios** con validación completa
 - **Sistema de roles** (Usuario/Administrador) con permisos diferenciados
 - **Base de datos SQL Server** para almacenamiento seguro
+- **🆕 Cambio de contraseñas** con interfaz dedicada y validaciones completas
+- **🆕 Contraseñas temporales** para nuevos usuarios con cambio obligatorio
+- **🆕 Redirección automática** para usuarios con contraseña temporal
 
 ### 📊 Dashboard Financiero Inteligente
 - **Resumen financiero completo** con balance total, ingresos y gastos del mes
@@ -350,6 +353,7 @@ python start_python_api.py
 - **POST** `/api/register` - Registro de usuarios
 - **POST** `/api/login` - Autenticación de usuarios
 - **POST** `/api/verify` - Verificación de códigos 2FA
+- **POST** `/api/change-password` - Cambio de contraseña con validación completa
 - **GET** `/api/profile` - Perfil del usuario autenticado
 
 ### **Endpoints de Gestión de Usuarios (Solo Administradores)**
@@ -500,7 +504,21 @@ Proyecto_Analisis_Financiero/
 
 ## 🔄 Historial de Versiones
 
-### v3.10.2 (Actual) - **Mejoras en UI de Página de Verificación**
+### v3.11.0 (Actual) - **Sistema Completo de Cambio de Contraseñas**
+- ✅ **Funcionalidad de cambio de contraseña** con interfaz dedicada
+- ✅ **Vista cambiar-contrasena.html** con validaciones completas
+- ✅ **Endpoint /api/change-password** para cambio seguro de contraseñas
+- ✅ **Soporte para contraseñas actuales** (normales y temporales)
+- ✅ **Validaciones robustas** de longitud mínima y confirmación
+- ✅ **Botón "Volver al Login"** con estilo profesional
+- ✅ **Redirección automática** para usuarios con contraseña temporal
+- ✅ **Mejoras en manejo de errores** del login con restauración de botón
+- ✅ **Columnas TempPassword y MustChangePassword** en tabla Users
+- ✅ **Diseño horizontal optimizado** para botones de login
+- ✅ **Logs de debug** para troubleshooting mejorado
+- ✅ **Script restart_server.bat** para reinicio automático del servidor
+
+### v3.10.2 - **Mejoras en UI de Página de Verificación**
 - ✅ **Botón "Volver al Login" rediseñado** con estilos profesionales
 - ✅ **Gradiente elegante** y efectos hover suaves
 - ✅ **Icono SVG animado** con transiciones fluidas
