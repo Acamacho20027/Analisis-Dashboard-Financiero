@@ -465,7 +465,7 @@ async function confirmarEliminacion() {
     if (!archivoIdAEliminar) return;
     
     try {
-        const token = localStorage.getItem('authToken');
+        const token = localStorage.getItem('token');
         if (!token) {
             throw new Error('Token de autenticación no encontrado');
         }
